@@ -46,6 +46,24 @@ button {
     font-size: 0.9em;
     color: #333;
 }
+.page-inscription {
+    font-size: 18px;
+}
+
+.page-inscription h1 {
+    font-size: 26px;
+}
+
+.page-inscription label {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.page-inscription select,
+.page-inscription input,
+.page-inscription button {
+    font-size: 18px;
+}
 /* blocs verticaux */
 .actions, .filters {
     max-width: 900px;
