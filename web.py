@@ -4,7 +4,6 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-init_db()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")
@@ -42,6 +41,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+init_db()
 
 @app.route("/download-db")
 def download_db():
