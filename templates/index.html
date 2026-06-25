@@ -13,13 +13,13 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .card {
     background: white;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 .card.repet {
@@ -30,16 +30,31 @@ body {
     background: #fff3e6;
     border-left: 6px solid #e67e22;
 }
-.actions a {
-    margin-right: 10px;
+.date {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.info {
+    font-size: 15px;
+    margin-top: 2px;
+    color: #333;
+}
+button, a.button {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
+    display: inline-block;
+    margin-top: 6px;
     text-decoration: none;
 }
-
-button {
+.inscriptions {
     margin-top: 8px;
-    padding: 6px 10px;
+    font-size: 14px;
 }
-
 .hidden {
     display: none;
 }
@@ -65,30 +80,31 @@ button {
 
 {% for event in events %}
 
-<div class="card {% if event['type'] == 'repet' %}repet{% else %}concert{% endif %}">
+<div class="card {{ event['type'] }}">
 
-    <h3>
-        {% if event["type"] == "repet" %}
-            🎼 Répétition
+    <div class="date">
+        {% if event['type'] == "repet" %}
+            🎼
         {% else %}
-            🎶 Concert
+            🎺
         {% endif %}
-    </h3>
-
-    <p>📅 {{ event["date"] }} • {{ event["heure"] }}</p>
-    <p>📍 {{ event["lieu"] }}</p>
-    <p><strong>{{ event["titre"] }}</strong></p>
-
-    <div class="actions">
-        <a href="/edit/{{ event['id'] }}">✏️ Modifier</a>
-        <a href="/inscription/{{ event['id'] }}">📝 Inscription</a>
+        {{ event["date"] }} - {{ event["heure"] }}
     </div>
+
+    <div class="info">
+        <b>{{ event["titre"] }}</b><br>
+        {{ event["lieu"] }}
+    </div>
+
+    <a class="button" href="/inscription/{{ event['id'] }}">
+        📋 Inscription
+    </a>
 
     <button onclick="toggle({{ event['id'] }})">
         👥 Voir inscrits
     </button>
 
-    <div id="p{{ event['id'] }}" class="hidden">
+    <div id="p{{ event['id'] }}" class="hidden inscriptions">
         {% for m in membres %}
             {% if m['id'] in presences_by_event[event['id']] %}
                 ✔ {{ m['nom'] }}<br>
