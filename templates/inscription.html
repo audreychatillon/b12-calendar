@@ -1,45 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body class="page-inscription">
+
 <div class="page">
-<h1>Inscription</h1>
 
-<p>
-<strong>{{ event["titre"] }}</strong><br>
-{{ event["date"] }} {{ event["heure"] }}
-</p>
+    <h1>🎺 Inscription</h1>
 
-<form method="POST" action="/inscription">
+    <p>
+        <strong>{{ event["titre"] }}</strong><br>
+        {{ event["date"] }} {{ event["heure"] }}
+    </p>
 
-    <input type="hidden" name="event_id" value="{{ event['id'] }}">
+    <form method="POST" action="/inscription">
 
-    <!-- Musicien -->
-    <label>Musicien :</label><br>
-    <select name="membre_id">
-        {% for m in membres %}
-            <option value="{{ m['id'] }}">{{ m['nom'] }}</option>
-        {% endfor %}
-    </select>
+        <input type="hidden" name="event_id" value="{{ event['id'] }}">
 
+        <!-- Musicien -->
+        <label for="membre_id">Musicien</label>
+        <select name="membre_id" id="membre_id">
+            {% for m in membres %}
+                <option value="{{ m['id'] }}">{{ m['nom'] }}</option>
+            {% endfor %}
+        </select>
 
-    <!-- Participation -->
-    <label>Participation :</label><br>
-    <select name="statut">
-        <option value="present">Je serai présent</option>
-        <option value="absent">Je serai absent</option>
-    </select>
+        <!-- Participation -->
+        <label for="statut">Participation</label>
+        <select name="statut" id="statut">
+            <option value="present">Je serai présent</option>
+            <option value="absent">Je serai absent</option>
+        </select>
 
-    <br><br>
+        <button type="submit">Valider</button>
 
-    <button type="submit">Valider</button>
+    </form>
 
-</form>
+</div>
 
 </body>
 </html>
