@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inscription</title>
+</head>
+<body>
+
+<h1>🎺 Inscription</h1>
+
+<p>
+<strong>{{ event["titre"] }}</strong><br>
+{{ event["date"] }} {{ event["heure"] }}
+</p>
+
+<form method="POST" action="/inscription">
+
+    <input type="hidden" name="event_id" value="{{ event['id'] }}">
+
+    <!-- Musicien -->
+    <label>Musicien :</label><br>
+    <select name="membre_id">
+        {% for m in membres %}
+            <option value="{{ m['id'] }}">{{ m['nom'] }}</option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <!-- Participation -->
+    <label>Participation :</label><br>
+    <select name="statut">
+        <option value="present">Je serai présent</option>
+        <option value="absent">Je serai absent</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Valider</button>
+
+</form>
+
+</body>
+</html>

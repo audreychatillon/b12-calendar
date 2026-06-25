@@ -1,0 +1,19 @@
+<h1>Modifier événement</h1>
+
+<form method="post">
+    Date : <input name="date" value="{{ event[0] }}"><br><br>
+    Heure : <input name="heure" value="{{ event[1] }}"><br><br>
+
+    Type :
+    <select name="type">
+        <option value="repet">Répétition</option>
+        <option value="concert">Concert</option>
+    </select><br><br>
+
+    Titre : <input name="titre" value="{{ event[4] }}"><br><br>
+    Lieu : <input name="lieu" value="{{ event[5] }}"><br><br>
+
+    <button>Modifier</button>
+</form>
+
+<a href="/">Retour</a>
