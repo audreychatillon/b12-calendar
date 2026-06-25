@@ -54,13 +54,13 @@
             </a>
 
             <button class="button voir" onclick="toggle({{ event['id'] }})">
-                👥 Inscrits
+                ❌ Absents
             </button>
 
             <div id="p{{ event['id'] }}" class="hidden">
                 {% for m in membres %}
-                    {% if m['id'] in presences_by_event[event['id']] %}
-                        ✔ {{ m['nom'] }}<br>
+                    {% if m['id'] not in presences_by_event[event['id']] %}
+                        ❌ {{ m['nom'] }}<br>
                     {% endif %}
                 {% endfor %}
             </div>
