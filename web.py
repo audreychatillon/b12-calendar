@@ -1,13 +1,24 @@
 from flask import Flask, render_template, request, redirect, send_file, abort, g
-from datetime import date,timedelta
+from datetime import date,timedelta, datetime
+import locale
 import sqlite3
 import os
 
+try:
+    locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+except locale.Error:
+    locale.setlocale(locale.LC_TIME, "C")
+
+
+def format_date_fr(date_str):
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    return date_obj.strftime("%A %d %B %Y")
+
 app = Flask(__name__)
+app.jinja_env.globals.update(format_date_fr=format_date_fr)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")
-
 def init_db():
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()

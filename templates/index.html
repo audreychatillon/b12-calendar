@@ -44,7 +44,7 @@
             </div>
 
             <div class="info">
-                {{ event["date"] }} à {{ event["heure"] }}<br>
+                {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}<br>
                 <b>{{ event["titre"] }}</b><br>
                 {{ event["lieu"] }}
             </div>
