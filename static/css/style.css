@@ -1,38 +1,42 @@
- body {
+body {
     font-family: 'Inter', sans-serif;
     background: #f5f5f5;
     margin: 0;
     padding-bottom: 80px;
 }
 
-header {
-    background: linear-gradient(135deg, #3C423A 0%, #20251F 100%);
-    padding: 18px 20px;
+/* TITRE pleine largeur */
+.page-title {
     text-align: center;
-    box-shadow: 0 2px 12px rgba(32,37,31,0.22);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    padding: 20px;
+    margin: 0;
 }
-.container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    gap: 12px;
-
-    width: 100%;
+.admin {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 0.9em;
+    color: #333;
+}
+/* blocs verticaux */
+.actions, .filters {
     max-width: 900px;
     margin: 0 auto;
     padding: 10px;
 }
-.calendar-grid {
+
+/* calendrier = SEULE grille */
+.calendar {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
+
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
 }
 
+/* cards */
 .card {
     background: white;
     padding: 10px;
@@ -50,44 +54,26 @@ header {
     border-left: 5px solid #e67e22;
 }
 
-/* TITRE ULTRA VISIBLE */
-.title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* INFOS PLUS PETITES */
-.info {
-    font-size: 15px;
-    margin-top: 4px;
-    color: #333;
-}
-
+/* boutons */
 .button {
     display: block;
     width: 100%;
-    box-sizing: border-box;
     margin-top: 8px;
-    padding: 10px 12px;
-    font-size: 16px;
+    padding: 10px;
     border-radius: 8px;
-    text-decoration: none;
     text-align: center;
+    text-decoration: none;
 }
 
-/* bouton inscription */
-.button.inscription {
-    background: #2ecc71;
-    color: white;
-}
+.button.inscription { background: #2ecc71; color: white; }
+.button.voir { background: #3498db; color: white; }
 
-/* bouton voir inscrits */
-.button.voir {
-    background: #3498db;
-    color: white;
+/* mobile = on garde multi-colonnes */
+@media (max-width: 600px) {
+    .calendar {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
 }
-
-/* toggle zone */
 .hidden {
     display: none;
 }

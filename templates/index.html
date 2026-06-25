@@ -14,80 +14,71 @@
 </head>
 <body>
 
-<h1>🎺 B12 - Calendrier</h1>
+<h1 class="page-title">🎺 B12 - Calendrier</h1>
 
-<h2> Rajouter repet/concert </h2>
-<a href="/add">➕ Ajouter événement</a>
-
-
-<h2>Filtres</h2>
-<a href="/?filtre=tout">Tout</a> |
-<a href="/?filtre=repet">Répétitions</a> |
-<a href="/?filtre=concert">Concerts</a> |
-<a href="/?filtre=1m">1 mois</a> |
-<a href="/?filtre=3m">3 mois</a> |
-<a href="/?filtre=6m">6 mois</a>
-
-<div class="container">
-<h2>📅 Événements</h2>
-<div class="event-list">
-{% for event in events %}
-
-<div class="card {{ event['type'] }}">
-
-    <div class="title">
-        {% if event['type'] == "repet" %}
-            🎼 Répétition
-        {% else %}
-            🎺 Concert
-        {% endif %}
-    </div>
-
-    <div class="info">
-        {{ event["date"] }} à {{ event["heure"] }}<br>
-        <b>{{ event["titre"] }}</b><br>
-        {{ event["lieu"] }}
-    </div>
-
-    <a class="button inscription" href="/inscription/{{ event['id'] }}">
-        📋 Inscription
-    </a>
-
-    <button class="button voir" onclick="toggle({{ event['id'] }})">
-        👥 Inscrits
-    </button>
-
-    <div id="p{{ event['id'] }}" class="hidden">
-        {% for m in membres %}
-            {% if m['id'] in presences_by_event[event['id']] %}
-                ✔ {{ m['nom'] }}<br>
-            {% endif %}
-        {% endfor %}
-    </div>
-
+<div class="actions">
+    <h2>Rajouter répétition / concert</h2>
+    <a href="/add">➕ Ajouter événement</a>
 </div>
 
-{% endfor %}
+<div class="filters">
+    <h2>Filtres</h2>
+    <a href="/?filtre=tout">Tout</a> |
+    <a href="/?filtre=repet">Répétitions</a> |
+    <a href="/?filtre=concert">Concerts</a> |
+    <a href="/?filtre=1m">1 mois</a> |
+    <a href="/?filtre=3m">3 mois</a> |
+    <a href="/?filtre=6m">6 mois</a>
+</div>
 
+<div class="calendar">
+    {% for event in events %}
+        <div class="card {{ event['type'] }}">
+            <div class="title">
+                {% if event['type'] == "repet" %}
+                    🎼 Répétition
+                {% else %}
+                    🎺 Concert
+                {% endif %}
+            </div>
+
+            <div class="info">
+                {{ event["date"] }} à {{ event["heure"] }}<br>
+                <b>{{ event["titre"] }}</b><br>
+                {{ event["lieu"] }}
+            </div>
+
+            <a class="button inscription" href="/inscription/{{ event['id'] }}">
+                📋 Inscription
+            </a>
+
+            <button class="button voir" onclick="toggle({{ event['id'] }})">
+                👥 Inscrits
+            </button>
+
+            <div id="p{{ event['id'] }}" class="hidden">
+                {% for m in membres %}
+                    {% if m['id'] in presences_by_event[event['id']] %}
+                        ✔ {{ m['nom'] }}<br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 <h3>Administration</h3>
 <a href="/download-db">
     📥 Télécharger la base de données
 </a>
-
-
 <script>
 function toggle(id) {
     const el = document.getElementById("p" + id);
 
-    if (el.style.display === "none" || el.style.display == "") {
-        el.style.display = "block";
-    } else {
-        el.style.display = "none";
-    }
+    if (!el) return;
+
+    el.classList.toggle("hidden");
 }
 </script>
-
 </body>
 </html>
