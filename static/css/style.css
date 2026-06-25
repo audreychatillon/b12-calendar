@@ -1,10 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background: #f5f5f5;
     margin: 0;
     padding-bottom: 80px;
+    overflow-x: hidden;
 }
 
+.page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, select, button {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+button {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
 /* TITRE pleine largeur */
 .page-title {
     text-align: center;
@@ -28,8 +56,8 @@ body {
 /* calendrier = SEULE grille */
 .calendar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
 
     max-width: 900px;
     margin: 0 auto;
@@ -42,6 +70,7 @@ body {
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-width: 0;
 }
 
 .card.repet {
@@ -58,11 +87,14 @@ body {
 .button {
     display: block;
     width: 100%;
-    margin-top: 8px;
-    padding: 10px;
+    padding: 10px 12px;
+    font-size: 16px;
     border-radius: 8px;
     text-align: center;
     text-decoration: none;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .button.inscription { background: #2ecc71; color: white; }
@@ -77,3 +109,11 @@ body {
 .hidden {
     display: none;
 }
+
+@media (max-width: 600px) {
+    .calendar {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 8px;
+    }
+}
+
