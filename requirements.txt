@@ -1,2 +1,7 @@
-flask
-gunicorn
+Flask==3.0.3 
+google-cloud-storage==2.16.0 
+google-cloud-firestore==2.19.0 
+firebase-admin==6.7.0 
+Flask-Cors==4.0.1 
+gunicorn==22.0.0 
+Pillow==10.4.0
