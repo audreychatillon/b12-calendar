@@ -4,9 +4,44 @@ import sqlite3
 import os
 
 app = Flask(__name__)
+init_db()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")
+
+def init_db():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS evenements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT,
+        heure TEXT,
+        titre TEXT,
+        type TEXT,
+        lieu TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS membres (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS presences (
+        membre_id INTEGER,
+        evenement_id INTEGER,
+        statut TEXT,
+        PRIMARY KEY (membre_id, evenement_id)
+    )
+    """)
+
+    conn.commit()
+    conn.close()
 
 @app.route("/download-db")
 def download_db():
