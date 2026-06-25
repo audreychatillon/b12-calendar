@@ -1,14 +1,16 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_file
 from datetime import date,timedelta
 import sqlite3
 import os
-
-print("🔥 WEB.PY CHARGÉ")
 
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")
+
+@app.route("/download-db")
+def download_db():
+    return send_file("b12.db", as_attachment=True)
 
 def get_presences(event_id):
     conn = sqlite3.connect(DB)
