@@ -16,16 +16,21 @@ header {
     justify-content: center;
     overflow: hidden;
 }
-
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     gap: 12px;
 
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
     padding: 10px;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
 }
 
 .card {
