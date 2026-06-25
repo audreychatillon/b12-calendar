@@ -46,12 +46,19 @@ button {
     font-size: 0.9em;
     color: #333;
 }
+/* ===== PAGE INSCRIPTION ===== */
 .page-inscription {
-    font-size: 18px;
+    font-size: 18px; /* augmente tout d’un coup */
 }
 
 .page-inscription h1 {
-    font-size: 26px;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.page-inscription p {
+    font-size: 18px;
+    line-height: 1.5;
 }
 
 .page-inscription label {
@@ -63,12 +70,7 @@ button {
 .page-inscription input,
 .page-inscription button {
     font-size: 18px;
-}
-/* blocs verticaux */
-.actions, .filters {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 10px;
+    padding: 12px;
 }
 
 /* calendrier = SEULE grille */
