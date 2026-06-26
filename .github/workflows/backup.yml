@@ -1,5 +1,8 @@
 name: Daily DB Backup
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: "0 2 * * *"   # tous les jours à 2h UTC
