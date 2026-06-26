@@ -40,7 +40,7 @@
                     {% if event['type'] == "repet" %}
                         🎼 Répétition
                     {% else %}
-                        🎺 Concert
+                        🎺  🥁 Concert 🎸 🎷
                     {% endif %}
                 </div>
 
@@ -80,7 +80,7 @@
 
             <div id="abs{{ event['id'] }}" class="hidden">
                 {% set statuses = status_by_event[event['id']] %}
-                    {% for m in membres %}
+                    {% for m in membres | sort(attribute='nom') %}
                         {% if statuses.get(m['id']) == "absent" %}
                             ✖ {{ m['nom'] }}<br>
                         {% endif %}
@@ -89,7 +89,7 @@
             
             <div id="pend{{ event['id'] }}" class="hidden">
                 {% set statuses = status_by_event.get(event['id'], {}) %}
-                {% for m in membres %}
+                {% for m in membres | sort(attribute='nom') %}
                     {% if statuses.get(m['id']) not in ["present", "absent"] %}
                         ? {{ m['nom'] }}<br>
                     {% endif %}
@@ -98,7 +98,7 @@
             
             <div id="pres{{ event['id'] }}" class="hidden">
                 {% set statuses = status_by_event[event['id']] %}
-                    {% for m in membres %}
+                    {% for m in membres | sort(attribute='nom')%}
                         {% if statuses.get(m['id']) == "present" %}
                             ✔ {{ m['nom'] }}<br>
                         {% endif %}
