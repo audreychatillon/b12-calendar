@@ -38,8 +38,12 @@
         <div class="field">
             <label>Type :</label>
             <select name="type" required>
-                <option value="repet">Répétition</option>
-                <option value="concert">Concert</option>
+                    <option value="repet" {% if event['type'] == 'repet' %}selected{% endif %}>
+                        Répétition
+                    </option>
+                    <option value="concert" {% if event['type'] == 'concert' %}selected{% endif %}>
+                        Concert
+                    </option>
             </select>
         </div>
 
