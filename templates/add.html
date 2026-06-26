@@ -1,41 +1,67 @@
-<h1>Ajouter événement</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<form method="post">
+    <title>Ajouter événement</title>
 
-    <div class="field">
-        <label>Date :</label>
-        <div class="date-input">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="page-add">
+
+<header class="site-header">
+
+    <h1 class="site-title">➕ 📅 Ajouter événement</h1>
+
+    <img src="{{ url_for('static', filename='img/b12.png') }}"
+         class="site-logo"
+         alt="B12 logo">
+
+</header>
+
+<div class="page">
+
+    <form method="post">
+
+        <div class="field">
+            <label>Date :</label>
             <input type="date" name="date" required>
-            <span>📅</span>
         </div>
-    </div>
 
-    <div class="field">
-        <label>Heure :</label>
-        <input type="time" name="heure" required>
-    </div>
+        <div class="field">
+            <label>Heure :</label>
+            <input type="time" name="heure" required>
+        </div>
 
-    <div class="field">
-        <label>Type :</label>
-        <select name="type" required>
-            <option value="repet">Répétition</option>
-            <option value="concert">Concert</option>
-        </select>
-    </div>
+        <div class="field">
+            <label>Type :</label>
+            <select name="type" required>
+                <option value="repet">Répétition</option>
+                <option value="concert">Concert</option>
+            </select>
+        </div>
 
-    <div class="field">
-        <label>Titre :</label>
-        <input name="titre" required>
-    </div>
+        <div class="field">
+            <label>Titre :</label>
+            <input name="titre" required>
+        </div>
 
-    <div class="field">
-        <label>Lieu :</label>
-        <input name="lieu">
-    </div>
+        <div class="field">
+            <label>Lieu :</label>
+            <input name="lieu">
+        </div>
 
-    <button type="submit">Ajouter et Retour au calendrier</button>
-</form>
+        <button type="submit">Ajouter et retour calendrier</button>
 
-<br>
+    </form>
 
-<a href="/">Retour au calendrier</a>
+    <br>
+
+    <a href="/" class="back-link">← Retour au calendrier</a>
+
+</div>
+
+</body>
+</html>

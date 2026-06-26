@@ -9,14 +9,16 @@
 </head>
 
 <body class="page-inscription">
+<header class="site-header">
+    <h1 class="site-title">🎺 🥁 Inscription 🎷 🎸</h1>
+    <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo">
+</header>
 
 <div class="page">
 
-    <h1>🎺 🥁 Inscription 🎷 🎸</h1>
-
     <p>
         <strong>{{ event["titre"] }}</strong><br>
-        {{ event["date"] }} {{ event["heure"] }}
+        {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}
     </p>
 
     <form method="POST" action="/inscription">
