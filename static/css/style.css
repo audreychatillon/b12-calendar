@@ -249,8 +249,8 @@ button {
 }
 
 .status-btn.inscription {
-    border-color: #3498db;
-    color: #3498db;
+    border-color: #2c3e50;
+    color: #2c3e50;
     padding: 4px 10px;   /* ↓ réduit la hauteur uniquement ici */
     line-height: 1;      /* évite l’étirement vertical */
 }
