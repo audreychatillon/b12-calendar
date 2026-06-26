@@ -54,21 +54,73 @@ def init_db():
     conn.close()
 init_db()
 
-@app.route("/download-db")
-def download_db():
-    return send_file("b12.db", as_attachment=True)
-
-def get_presences(event_id):
+def get_status_by_event(event_id):
     conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT membre_id, statut
+        FROM presences
+        WHERE evenement_id = ?
+    """, (event_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    status_map = {}
+
+    for membre_id, statut in rows:
+        status_map[membre_id] = statut
+
+    return status_map
+
+def get_stats_by_event(event_id):
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT membre_id, statut
+        FROM presences
+        WHERE evenement_id = ?
+    """, (event_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    stats = {
+        "present": 0,
+        "absent": 0,
+        "nsp": 0
+    }
+
+    for membre_id, statut in rows:
+        if statut in stats:
+            stats[statut] += 1
+
+    # les membres sans ligne = NSP
+    cursor = sqlite3.connect(DB).cursor()
+    cursor.execute("SELECT COUNT(*) FROM membres")
+    total = cursor.fetchone()[0]
+
+    stats["nsp"] = total - (stats["present"] + stats["absent"])
+
+    return stats
+
+
+def get_status(event_id,statut):
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT membre_id
         FROM presences
-        WHERE evenement_id = ? AND statut = 'present'
-    """, (event_id,))
+        WHERE evenement_id = ? AND statut = ?
+    """, (event_id,statut))
 
-    return [row[0] for row in cursor.fetchall()]
+    resultat = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return resultat
 
 def get_events():
     conn = sqlite3.connect(DB)
@@ -83,6 +135,10 @@ def get_events():
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+@app.route("/download-db")
+def download_db():
+    return send_file("b12.db", as_attachment=True)
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
@@ -106,20 +162,8 @@ def add():
 
         return redirect("/")
 
-    return """
-    <form method="post">
-        Date: <input name="date"><br>
-        Heure: <input name="heure"><br>
-        Type: 
-        <select name="type">
-            <option value="repet">Répétition</option>
-            <option value="concert">Concert</option>
-        </select><br>
-        Titre: <input name="titre"><br>
-        Lieu: <input name="lieu"><br>
-        <button>Ajouter</button>
-    </form>
-    """
+    return render_template("add.html")
+
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
@@ -258,12 +302,15 @@ def index():
     cursor.execute(query, params)
     events = cursor.fetchall()
 
-    # ✅ présences par événement
-    presences_by_event = {}
+    # statut par événement
+    status_by_event = {}
+    stats_by_event = {}
     for event in events:
-        presences_by_event[event["id"]] = get_presences(event["id"])
+        event_id = event["id"]
+        status_by_event[event_id] = get_status_by_event(event_id)
+        stats_by_event[event["id"]] = get_stats_by_event(event["id"])
 
-    # ✅ membres AVEC ID (important)
+    # membres AVEC ID (important)
     cursor.execute("SELECT id, nom FROM membres")
     membres = cursor.fetchall()
 
@@ -273,7 +320,8 @@ def index():
         "index.html",
         events=events,
         membres=membres,
-        presences_by_event=presences_by_event,
+        status_by_event=status_by_event,
+        stats_by_event=stats_by_event,
         filtre=filtre
     )
 

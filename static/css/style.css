@@ -21,12 +21,15 @@ form {
     gap: 12px;
 }
 
-input, select, button {
+input:not([type="date"]):not([type="time"]),
+select,
+button {
     font-size: 16px;
     padding: 10px;
     border-radius: 8px;
     box-sizing: border-box;
 }
+
 button {
     background: #2ecc71;
     color: white;
@@ -65,7 +68,6 @@ button {
     font-size: 16px;
     font-weight: 600;
 }
-
 .page-inscription select,
 .page-inscription input,
 .page-inscription button {
@@ -76,7 +78,7 @@ button {
 /* calendrier = SEULE grille */
 .calendar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 10px;
 
     max-width: 900px;
@@ -91,6 +93,7 @@ button {
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     min-width: 0;
+    overflow: hidden;
 }
 
 .card.repet {
@@ -102,7 +105,9 @@ button {
     background: #fff3e6;
     border-left: 5px solid #e67e22;
 }
-
+.info {
+    margin-bottom: 6px;
+}
 /* boutons */
 .button {
     display: block;
@@ -117,8 +122,66 @@ button {
     white-space: normal;
 }
 
-.button.inscription { background: #2ecc71; color: white; }
-.button.voir { background: #3498db; color: white; }
+/* status row */
+.status-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+.status-btn {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 8px 10px;
+    border-radius: 10px;
+
+    background: white;
+    border: 2px solid transparent;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.15s ease;
+}
+.status-btn.absent {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.status-btn.pending {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+.status-btn.present {
+    border-color: #27ae60;
+    color: #27a260;
+}
+.status-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.status-btn span.count {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.status-btn.inscription {
+    border-color: #3498db;
+    color: #3498db;
+    padding: 4px 10px;   /* ↓ réduit la hauteur uniquement ici */
+    line-height: 1;      /* évite l’étirement vertical */
+}
+
 
 /* mobile = on garde multi-colonnes */
 @media (max-width: 600px) {
@@ -137,3 +200,49 @@ button {
     }
 }
 
+
+/* dates */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+input[type="date"],
+input[type="time"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.date-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.date-input input {
+    border: none;
+    outline: none;
+    flex: 1;
+}
+
+.date-input span {
+    font-size: 18px;
+}
+input, select {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}

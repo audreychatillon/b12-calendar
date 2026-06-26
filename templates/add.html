@@ -1,19 +1,41 @@
 <h1>Ajouter événement</h1>
 
 <form method="post">
-    Date : <input name="date"><br><br>
-    Heure : <input name="titre"><br><br>
 
-    Type :
-    <select name="type">
-        <option value="repet">Répétition</option>
-        <option value="concert">Concert</option>
-    </select><br><br>
+    <div class="field">
+        <label>Date :</label>
+        <div class="date-input">
+            <input type="date" name="date" required>
+            <span>📅</span>
+        </div>
+    </div>
 
-    Titre : <input name="titre"><br><br>
-    Lieu : <input name="lieu"><br><br>
+    <div class="field">
+        <label>Heure :</label>
+        <input type="time" name="heure" required>
+    </div>
 
-    <button>Ajouter</button>
+    <div class="field">
+        <label>Type :</label>
+        <select name="type" required>
+            <option value="repet">Répétition</option>
+            <option value="concert">Concert</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>Titre :</label>
+        <input name="titre" required>
+    </div>
+
+    <div class="field">
+        <label>Lieu :</label>
+        <input name="lieu">
+    </div>
+
+    <button type="submit">Ajouter et Retour au calendrier</button>
 </form>
+
+<br>
 
 <a href="/">Retour</a>

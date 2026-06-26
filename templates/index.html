@@ -49,20 +49,55 @@
                 {{ event["lieu"] }}
             </div>
 
-            <a class="button inscription" href="/inscription/{{ event['id'] }}">
-                📋 Inscription
+            <a class="status-btn inscription" href="/inscription/{{ event['id'] }}">
+                Inscription
             </a>
 
-            <button class="button voir" onclick="toggle({{ event['id'] }})">
-                ❌ Absents
-            </button>
+            <div class="status-row">
+                <button class="status-btn absent"
+                        onclick="toggle('abs',{{ event['id'] }})">
+                    <span class="icon"> ❌ </span>
+                    <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
+                </button>
+            
+                <button class="status-btn pending"
+                        onclick="toggle('pend',{{ event['id'] }})">
+                    <span class="icon"> ❓ </span>
+                    <span class="count">{{  stats_by_event[event['id']]['nsp']  }}</span>
+                </button>
+            
+                <button class="status-btn present"
+                        onclick="toggle('pres',{{ event['id'] }})">
+                    <span class="icon"> ✅</span>
+                    <span class="count">{{ stats_by_event[event['id']]['present'] }}</span>
+                </button>
+            </div>
 
-            <div id="p{{ event['id'] }}" class="hidden">
+            <div id="abs{{ event['id'] }}" class="hidden">
+                {% set statuses = status_by_event[event['id']] %}
+                    {% for m in membres %}
+                        {% if statuses.get(m['id']) == "absent" %}
+                            ✖ {{ m['nom'] }}<br>
+                        {% endif %}
+                    {% endfor %}
+            </div>
+            
+            <div id="pend{{ event['id'] }}" class="hidden">
+                {% set statuses = status_by_event.get(event['id'], {}) %}
                 {% for m in membres %}
-                    {% if m['id'] not in presences_by_event[event['id']] %}
-                        ❌ {{ m['nom'] }}<br>
+                    {% if statuses.get(m['id']) not in ["present", "absent"] %}
+                        ? {{ m['nom'] }}<br>
                     {% endif %}
                 {% endfor %}
+            </div>
+            
+            <div id="pres{{ event['id'] }}" class="hidden">
+                {% set statuses = status_by_event[event['id']] %}
+                    {% for m in membres %}
+                        {% if statuses.get(m['id']) == "present" %}
+                            ✔ {{ m['nom'] }}<br>
+                        {% endif %}
+                    {% endfor %}
             </div>
         </div>
     {% endfor %}
@@ -73,12 +108,18 @@
     📥 Télécharger la base de données
 </a>
 <script>
-function toggle(id) {
-    const el = document.getElementById("p" + id);
+function toggle(type,id) {
+    const types = ["abs", "pend", "pres"];
+    types.forEach(t => {
+        const el = document.getElementById(t + id);
+        if (!el) return;
 
-    if (!el) return;
-
-    el.classList.toggle("hidden");
+        if (t === type) {
+            el.classList.toggle("hidden");
+        } else {
+            el.classList.add("hidden");
+        }
+    });
 }
 </script>
 </body>
