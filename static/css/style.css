@@ -9,7 +9,12 @@ body {
     padding-bottom: 80px;
     overflow-x: hidden;
 }
-
+body.repet {
+    background: #e8f2ff; /* bleu clair */
+}
+body.concert {
+    background: #fff1e0; /* orange clair */
+}
 .page {
     max-width: 600px;
     margin: 0 auto;

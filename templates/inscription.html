@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body class="page-inscription">
+<body class="page-inscription {% if event['type'] == 'concert' %}concert{% else %}repet{% endif %}">
 <header class="site-header">
     {% if event['type'] == 'concert' %}
         <h1 class="site-title">🎺 🥁 Inscription 🎸🎷</h1>
