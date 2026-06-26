@@ -45,9 +45,11 @@
                 </div>
 
                 <div class="info">
-                    {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}<br>
-                    <b>{{ event["titre"] }}</b><br>
-                    {{ event["lieu"] }}
+                    <a href="/edit/{{ event['id'] }}" class="event-link">
+                        {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}<br>
+                        <b>{{ event["titre"] }}</b><br>
+                        {{ event["lieu"] }}
+                    </a>
                 </div>
             </div>
 

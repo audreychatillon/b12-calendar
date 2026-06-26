@@ -168,6 +168,7 @@ def add():
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
     conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     if request.method == "POST":

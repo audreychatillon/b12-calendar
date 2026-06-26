@@ -1,19 +1,67 @@
-<h1>Modifier événement</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<form method="post">
-    Date : <input name="date" value="{{ event[0] }}"><br><br>
-    Heure : <input name="heure" value="{{ event[1] }}"><br><br>
+    <title>Ajouter événement</title>
 
-    Type :
-    <select name="type">
-        <option value="repet">Répétition</option>
-        <option value="concert">Concert</option>
-    </select><br><br>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
 
-    Titre : <input name="titre" value="{{ event[4] }}"><br><br>
-    Lieu : <input name="lieu" value="{{ event[5] }}"><br><br>
+<body class="page-add">
 
-    <button>Modifier</button>
-</form>
+<header class="site-header">
 
-<a href="/">Retour</a>
+    <h1 class="site-title">➕ 📅 Modifier un événement</h1>
+
+    <img src="{{ url_for('static', filename='img/b12.png') }}"
+         class="site-logo"
+         alt="B12 logo">
+
+</header>
+
+<div class="page">
+
+    <form method="post">
+
+        <div class="field">
+            <label>Date :</label>
+            <input type="date" name="date" value="{{ event['date'] }}" required>
+        </div>
+
+        <div class="field">
+            <label>Heure :</label>
+            <input type="time" name="heure" value="{{ event['heure'] }}" required>
+        </div>
+
+        <div class="field">
+            <label>Type :</label>
+            <select name="type" required>
+                <option value="repet">Répétition</option>
+                <option value="concert">Concert</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Titre :</label>
+            <input name="titre" value="{{ event['titre'] }}" required>
+        </div>
+
+        <div class="field">
+            <label>Lieu :</label>
+            <input name="lieu" value="{{ event['lieu'] }}">
+        </div>
+
+        <button type="submit">Enregistrer les modifications</button>
+
+    </form>
+
+    <br>
+
+    <a href="/" class="back-link">← Retour au calendrier</a>
+
+</div>
+
+</body>
+</html>
