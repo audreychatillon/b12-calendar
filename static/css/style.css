@@ -51,7 +51,7 @@ button {
 }
 .site-header {
     background: linear-gradient(90deg, #000 0%, #111 100%);
-    padding: 18px 24px;
+    padding: 8px 24px;
 
     display: flex;
     align-items: center;
@@ -67,7 +67,7 @@ button {
     text-align: left;
 }
 .site-logo {
-    height: 42px;   /* ajuste selon ton logo */
+    height: 50px; 
     width: auto;
     transition: transform 0.15s;
 }
@@ -93,7 +93,7 @@ button {
 
 .page-inscription h1 {
     font-size: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 
 .page-inscription p {

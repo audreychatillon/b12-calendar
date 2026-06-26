@@ -10,7 +10,11 @@
 
 <body class="page-inscription">
 <header class="site-header">
-    <h1 class="site-title">🎺 🥁 Inscription 🎷 🎸</h1>
+    {% if event['type'] == 'concert' %}
+        <h1 class="site-title">🎺 🥁 Inscription 🎸🎷</h1>
+    {% else %}
+        <h1 class="site-title">🎼 Inscription</h1>
+    {% endif %}
     <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo">
 </header>
 
