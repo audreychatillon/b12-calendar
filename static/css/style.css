@@ -19,6 +19,16 @@ body.concert {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
+    margin-top: 20px;
+}
+body.repet .page {
+    background: white;
+    border-left: 4px solid #4a90e2;
+}
+
+body.concert .page {
+    background: white;
+    border-left: 4px solid #ff8c42;
 }
 form {
     display: flex;
