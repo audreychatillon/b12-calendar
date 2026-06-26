@@ -8,14 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <title>B12 Calendrier</title>
+    <header class="site-header">    
+        <h1 class="site-title">Le calendrier du B12</h1>
+        <img src="/static/img/b12.png" class="site-logo" alt="B12 logo">
+    </header>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 <body>
-
-<h1 class="page-title">🎺 B12 - Calendrier</h1>
 
 <div class="actions">
     <h2>Rajouter répétition / concert</h2>
@@ -35,42 +35,47 @@
 <div class="calendar">
     {% for event in events %}
         <div class="card {{ event['type'] }}">
-            <div class="title">
-                {% if event['type'] == "repet" %}
-                    🎼 Répétition
-                {% else %}
-                    🎺 Concert
-                {% endif %}
+            <div class="content">
+                <div class="title">
+                    {% if event['type'] == "repet" %}
+                        🎼 Répétition
+                    {% else %}
+                        🎺 Concert
+                    {% endif %}
+                </div>
+
+                <div class="info">
+                    {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}<br>
+                    <b>{{ event["titre"] }}</b><br>
+                    {{ event["lieu"] }}
+                </div>
             </div>
 
-            <div class="info">
-                {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}<br>
-                <b>{{ event["titre"] }}</b><br>
-                {{ event["lieu"] }}
-            </div>
+            <div class="actions-bottom">
 
-            <a class="status-btn inscription" href="/inscription/{{ event['id'] }}">
-                Inscription
-            </a>
+                <a class="status-btn inscription" href="/inscription/{{ event['id'] }}">
+                    Inscription
+                </a>
 
-            <div class="status-row">
-                <button class="status-btn absent"
-                        onclick="toggle('abs',{{ event['id'] }})">
-                    <span class="icon"> ❌ </span>
-                    <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
-                </button>
-            
-                <button class="status-btn pending"
-                        onclick="toggle('pend',{{ event['id'] }})">
-                    <span class="icon"> ❓ </span>
-                    <span class="count">{{  stats_by_event[event['id']]['nsp']  }}</span>
-                </button>
-            
-                <button class="status-btn present"
-                        onclick="toggle('pres',{{ event['id'] }})">
-                    <span class="icon"> ✅</span>
-                    <span class="count">{{ stats_by_event[event['id']]['present'] }}</span>
-                </button>
+                <div class="status-row">
+                    <button class="status-btn absent"
+                            onclick="toggle('abs',{{ event['id'] }})">
+                        <span class="icon"> ❌ </span>
+                        <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
+                    </button>
+                
+                    <button class="status-btn pending"
+                            onclick="toggle('pend',{{ event['id'] }})">
+                        <span class="icon"> ❓ </span>
+                        <span class="count">{{  stats_by_event[event['id']]['nsp']  }}</span>
+                    </button>
+                
+                    <button class="status-btn present"
+                            onclick="toggle('pres',{{ event['id'] }})">
+                        <span class="icon"> ✅</span>
+                        <span class="count">{{ stats_by_event[event['id']]['present'] }}</span>
+                    </button>
+                </div>
             </div>
 
             <div id="abs{{ event['id'] }}" class="hidden">

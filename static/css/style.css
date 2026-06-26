@@ -49,6 +49,34 @@ button {
     font-size: 0.9em;
     color: #333;
 }
+.site-header {
+    background: linear-gradient(90deg, #000 0%, #111 100%);
+    padding: 18px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-title {
+    color: #ffd400;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    font-size: 22px;
+    text-align: left;
+}
+.site-logo {
+    height: 42px;   /* ajuste selon ton logo */
+    width: auto;
+    transition: transform 0.15s;
+}
+.site-logo:hover {
+    transform: scale(1.05);
+}
+.actions-bottom{
+    margin-top:auto;
+}
 /* ===== PAGE INSCRIPTION ===== */
 .page-inscription {
     font-size: 18px; /* augmente tout d’un coup */
@@ -94,6 +122,11 @@ button {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     min-width: 0;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height:100%;
 }
 
 .card.repet {
