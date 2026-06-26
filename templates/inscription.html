@@ -27,7 +27,10 @@
 
         <!-- Musicien -->
         <label for="membre_id">Musicien</label>
-        <select name="membre_id" id="membre_id">
+        <select name="membre_id" id="membre_id" required>
+            <option value="" selected disabled>
+                -- Choisir un.e B-douzien.ne --
+            </option>
             {% for m in membres %}
                 <option value="{{ m['id'] }}">{{ m['nom'] }}</option>
             {% endfor %}

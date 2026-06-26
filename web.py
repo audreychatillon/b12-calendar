@@ -243,6 +243,8 @@ def inscription_post():
     print(request.form)
     event_id = request.form["event_id"]
     membre_id = request.form["membre_id"]
+    if not membre_id:
+        return "B-douzien.ne obligatoire", 400
     statut = request.form["statut"]
 
     conn = sqlite3.connect(DB)
