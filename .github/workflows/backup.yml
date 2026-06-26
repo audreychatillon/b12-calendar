@@ -1,0 +1,51 @@
+name: Daily DB Backup
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # tous les jours à 2h UTC
+  workflow_dispatch:       # bouton manuel
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download DB from Render
+        run: curl -L -o b12.db https://b12-calendar.onrender.com/download-db
+
+      - name: Compute hash
+        id: hash
+        run: echo "HASH=$(sha256sum b12.db | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+      - name: Load previous hash
+        id: oldhash
+        run: |
+          if [ -f last_db_hash.txt ]; then
+            echo "OLD=$(cat last_db_hash.txt)" >> $GITHUB_OUTPUT
+          else
+            echo "OLD=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip if unchanged
+        run: |
+          if [ "${{ steps.hash.outputs.HASH }}" = "${{ steps.oldhash.outputs.OLD }}" ]; then
+            echo "No changes in DB → exit"
+            exit 0
+          fi
+
+      - name: Save backup
+        run: |
+          mkdir -p backups
+          cp b12.db backups/b12_$(date +%Y%m%d).db
+          echo "${{ steps.hash.outputs.HASH }}" > last_db_hash.txt
+
+      - name: Commit and push
+        run: |
+          git config user.name "backup-bot"
+          git config user.email "backup@bot.com"
+          git add backups last_db_hash.txt
+          git commit -m "DB backup $(date)" || exit 0
+          git push
