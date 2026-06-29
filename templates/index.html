@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <header class="site-header">    
-        <h1 class="site-title">Le calendrier du B12</h1>
+        <h1 class="site-title">
+        <span class="material-symbols-outlined">calendar_month</span>
+	Le calendrier du B12
+	</h1>
         <img src="/static/img/b12.png" class="site-logo" alt="B12 logo">
     </header>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 <body>
-
-<div class="actions">
-    <h2>Rajouter répétition / concert</h2>
-    <a href="/add">➕ Ajouter événement</a>
-</div>
 
 <div class="filters">
     <h2>Filtres</h2>
@@ -110,10 +108,6 @@
     {% endfor %}
 </div>
 
-<h3>Administration</h3>
-<a href="/download-db">
-    📥 Télécharger la base de données
-</a>
 <script>
 function toggle(type,id) {
     const types = ["abs", "pend", "pres"];
@@ -129,5 +123,33 @@ function toggle(type,id) {
     });
 }
 </script>
+
+
+<nav class="bottom-nav">
+
+    <a href="/" class="nav-item active">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span>Agenda</span>
+    </a>
+
+    <a href="/add" class="nav-item">
+        <span class="material-symbols-outlined">calendar_add_on</span>
+        <span>Ajouter</span>
+    </a>
+
+    <a href="/members" class="nav-item">
+        <span class="material-symbols-outlined">groups</span>
+        <span>Membres</span>
+    </a>
+
+    <a href="/admin" class="nav-item">
+        <span class="material-symbols-outlined">shield_person</span>
+        <span>Admin</span>
+    </a>
+
+</nav>
+
+
+
 </body>
 </html>

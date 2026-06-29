@@ -9,10 +9,19 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_TIME, "C")
 
+months_fr = {
+    1: "Janvier", 2: "Février", 3: "Mars", 4: "Avril",
+    5: "Mai", 6: "Juin", 7: "Juillet", 8: "Août",
+    9: "Septembre", 10: "Octobre", 11: "Novembre", 12: "Décembre"
+}
 
 def format_date_fr(date_str):
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     return date_obj.strftime("%A %d %B %Y")
+
+def month_key(date_str):
+    d = datetime.strptime(date_str, "%Y-%m-%d")
+    return f"{months_fr[d.month]} {d.year}"
 
 app = Flask(__name__)
 app.jinja_env.globals.update(format_date_fr=format_date_fr)
@@ -269,6 +278,14 @@ def inscription_post():
     conn.close()
 
     return redirect("/")
+
+@app.route("/members")
+def members():
+    return render_template("members.html")
+
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
 
 @app.route("/")
 def index():

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Administration</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+
+<body class="page-add">
+
+<header class="site-header">
+
+    <h1 class="site-title">
+        <span class="material-symbols-outlined logo-yellow">shield_person</span>
+        Administration
+    </h1>
+
+    <img src="{{ url_for('static', filename='img/b12.png') }}"
+         class="site-logo"
+         alt="B12 logo">
+
+</header>
+
+<div class="page">
+
+    <p>
+        <a class="button" href="/download-db">
+            💾 Télécharger la base de données
+        </a>
+    </p>
+
+    <br>
+
+    <a href="/" class="back-link">← Retour au calendrier</a>
+
+</div>
+
+
+</body>
+</html>

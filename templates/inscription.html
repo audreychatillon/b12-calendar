@@ -6,14 +6,23 @@
     <title>Inscription</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 
 <body class="page-inscription {% if event['type'] == 'concert' %}concert{% else %}repet{% endif %}">
 <header class="site-header">
     {% if event['type'] == 'concert' %}
-        <h1 class="site-title">🎺 🥁 Inscription 🎸🎷</h1>
+        <h1 class="site-title">
+	🎺 🥁 
+        <span class="material-symbols-outlined">edit_calendar</span>
+	Inscription 🎸🎷
+	</h1>
     {% else %}
-        <h1 class="site-title">🎼 Inscription</h1>
+        <h1 class="site-title">
+	🎼 
+        <span class="material-symbols-outlined">edit_calendar</span>
+	Inscription
+	</h1>
     {% endif %}
     <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo">
 </header>
