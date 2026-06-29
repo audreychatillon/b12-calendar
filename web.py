@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, send_file, abort, g
 from datetime import date,timedelta, datetime
+from calendar import monthrange
 import locale
 import sqlite3
 import os
@@ -9,19 +10,15 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_TIME, "C")
 
+def format_date_fr(date_str):
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    return date_obj.strftime("%A %d %B %Y")
+
 months_fr = {
     1: "Janvier", 2: "Février", 3: "Mars", 4: "Avril",
     5: "Mai", 6: "Juin", 7: "Juillet", 8: "Août",
     9: "Septembre", 10: "Octobre", 11: "Novembre", 12: "Décembre"
 }
-
-def format_date_fr(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-    return date_obj.strftime("%A %d %B %Y")
-
-def month_key(date_str):
-    d = datetime.strptime(date_str, "%Y-%m-%d")
-    return f"{months_fr[d.month]} {d.year}"
 
 app = Flask(__name__)
 app.jinja_env.globals.update(format_date_fr=format_date_fr)
@@ -289,17 +286,31 @@ def admin():
 
 @app.route("/")
 def index():
-
     filtre = request.args.get("filtre", "tout")
+    mois = request.args.get("mois")
+    today = date.today()
+    if mois and "-" in mois:
+        year, month = map(int, mois.split("-"))
+    else:
+        year, month = today.year, today.month
+    start = date(year, month, 1)
+    end = date(year, month, monthrange(year, month)[1])
+    print("ARGS:", request.args)
+    print("mois:", request.args.get("mois"))
+    print("year/month:", year, month)
 
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    query = "SELECT id, date, heure, titre, type, lieu FROM evenements WHERE 1=1"
-    params = []
 
-    today = date.today()
+    query = """
+    SELECT id, date, heure, titre, type, lieu
+    FROM evenements
+    WHERE date >= ? AND date <= ?
+    """
+    
+    params = [str(start), str(end)]
 
     # filtre type
     if filtre == "repet":
@@ -309,21 +320,6 @@ def index():
     elif filtre == "concert":
         query += " AND type = ?"
         params.append("concert")
-
-    # filtre temps
-    elif filtre == "1m":
-        query += " AND date >= ?"
-        params.append(str(today))
-        query += " AND date <= ?"
-        params.append(str(today + timedelta(days=30)))
-
-    elif filtre == "3m":
-        query += " AND date <= ?"
-        params.append(str(today + timedelta(days=90)))
-
-    elif filtre == "6m":
-        query += " AND date <= ?"
-        params.append(str(today + timedelta(days=1580)))
 
     query += " ORDER BY date, heure"
 
@@ -338,19 +334,22 @@ def index():
         status_by_event[event_id] = get_status_by_event(event_id)
         stats_by_event[event["id"]] = get_stats_by_event(event["id"])
 
-    # membres AVEC ID (important)
     cursor.execute("SELECT id, nom FROM membres")
     membres = cursor.fetchall()
 
     conn.close()
-
+    
     return render_template(
         "index.html",
         events=events,
         membres=membres,
         status_by_event=status_by_event,
         stats_by_event=stats_by_event,
-        filtre=filtre
+        filtre=filtre,
+        year=year,
+        month=month,
+        months_fr=months_fr,
+        mois=f"{year:04d}-{month:02d}"
     )
 
 if __name__ == "__main__":

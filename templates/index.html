@@ -20,14 +20,34 @@
 </head>
 <body>
 
+<div class="month-nav">
+    <a class="nav-btn"
+       href="/?mois={{ (year-1) if month==1 else year }}-{{ 12 if month==1 else month-1 }}&filtre={{ filtre }}">
+        ←
+    </a>
+
+    <h2 class="month-title">
+    	{{ months_fr[month] }} {{ year }}
+    </h2>
+
+    <a class="nav-btn"
+       href="/?mois={{ (year+1) if month==12 else year }}-{{ 1 if month==12 else month+1 }}&filtre={{ filtre }}">
+        →
+    </a>
+</div>
 <div class="filters">
-    <h2>Filtres</h2>
-    <a href="/?filtre=tout">Tout</a> |
-    <a href="/?filtre=repet">Répétitions</a> |
-    <a href="/?filtre=concert">Concerts</a> |
-    <a href="/?filtre=1m">1 mois</a> |
-    <a href="/?filtre=3m">3 mois</a> |
-    <a href="/?filtre=6m">6 mois</a>
+
+	<a href="/?mois={{ year }}-{{ '%02d' % month }}" class="{% if filtre == 'tout' %}active{% endif %}">
+	    Tous
+	</a>
+	
+	<a href="/?mois={{ year }}-{{ '%02d' % month }}&filtre=repet" class="{% if filtre == 'repet' %}active{% endif %}">
+	    🎼 Répétitions
+	</a>
+	
+	<a href="/?mois={{ year }}-{{ '%02d' % month }}&filtre=concert" class="{% if filtre == 'concert' %}active{% endif %}">
+	    🎺 Concerts 🎷
+	</a>
 </div>
 
 <div class="calendar">
