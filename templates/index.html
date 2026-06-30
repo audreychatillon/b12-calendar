@@ -134,16 +134,31 @@
         	                {% endif %}
         	            {% endfor %}
         	    </div>
-        	    
-        	    <div id="pend{{ event['id'] }}" class="hidden">
-        	        {% set statuses = status_by_event.get(event['id'], {}) %}
-        	        {% for m in membres | sort(attribute='nom') %}
-        	            {% if statuses.get(m['id']) not in ["present", "absent"] %}
-        	                ? {{ m['nom'] }}<br>
-        	            {% endif %}
-        	        {% endfor %}
-        	    </div>
-        	    
+        	   
+		   <div id="pend{{ event['id'] }}" class="hidden dual-columns">
+		   
+		       {% set statuses = status_by_event.get(event['id'], {}) %}
+		   
+		       <div class="col">
+		           <div class="col-title">? ne sait pas</div>
+		           {% for m in membres | sort(attribute='nom') %}
+		               {% if statuses.get(m['id']) == "pending" %}
+		                   <div class="line">? {{ m['nom'] }}</div>
+		               {% endif %}
+		           {% endfor %}
+		       </div>
+		   
+		       <div class="col">
+		           <div class="col-title">⚪ n'a pas répondu</div>
+		           {% for m in membres | sort(attribute='nom') %}
+		               {% if statuses.get(m['id']) is none %}
+		                   <div class="line">{{ m['nom'] }} ⚪</div>
+		               {% endif %}
+		           {% endfor %}
+		       </div>
+		   
+		   </div>
+ 
         	    <div id="pres{{ event['id'] }}" class="hidden">
         	        {% set statuses = status_by_event[event['id']] %}
         	            {% for m in membres | sort(attribute='nom')%}
