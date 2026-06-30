@@ -21,20 +21,23 @@
 <body>
 
 <div class="month-nav">
+
     <a class="nav-btn"
-       href="/?mois={{ (year-1) if month==1 else year }}-{{ 12 if month==1 else month-1 }}&filtre={{ filtre }}">
-        ←
+       href="/?mois={{ (year-1) if month==1 else year }}-{{ '%02d' % (12 if month==1 else month-1) }}&filtre={{ filtre }}">
+        <span class="material-symbols-outlined">chevron_left</span>
     </a>
 
     <h2 class="month-title">
-    	{{ months_fr[month] }} {{ year }}
+        {{ months_fr[month] }} {{ year }}
     </h2>
 
     <a class="nav-btn"
-       href="/?mois={{ (year+1) if month==12 else year }}-{{ 1 if month==12 else month+1 }}&filtre={{ filtre }}">
-        →
+       href="/?mois={{ (year+1) if month==12 else year }}-{{ '%02d' % (1 if month==12 else month+1) }}&filtre={{ filtre }}">
+        <span class="material-symbols-outlined">chevron_right</span>
     </a>
+
 </div>
+
 <div class="filters">
 
 	<a href="/?mois={{ year }}-{{ '%02d' % month }}" class="{% if filtre == 'tout' %}active{% endif %}">
