@@ -366,6 +366,25 @@ def update_member(id):
 def admin():
     return render_template("admin.html")
 
+@app.route("/admin/membres")
+def admin_membres():
+
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM membres
+        ORDER BY nom COLLATE NOCASE
+    """)
+
+    membres = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("admin_membres.html", membres=membres)
+
 @app.route("/")
 def index():
     filtre = request.args.get("filtre", "tout")

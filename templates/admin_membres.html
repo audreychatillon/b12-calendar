@@ -29,19 +29,21 @@
 
 <div class="members-list">
 	{% for m in membres %}
-        	<div class="member-item">
+        <form method="POST" action="/membres/update/{{ m['id'] }}" class="member-line">
 
-        	    <div class="member-name">
-        	        {{ m['nom'] }}
-        	    </div>
+            <span class="member-name">{{ m['nom'] }}</span>
 
-        	    {% if m['instruments'] %}
-        	        <div class="member-instruments">
-        	            {{ m['instruments'] }}
-        	        </div>
-        	    {% endif %}
+            <input type="text"
+                   name="instruments"
+                   value="{{ m['instruments'] }}"
+                   placeholder="Instruments">
 
-        	</div>
+            <button type="submit" class="btn-save">
+                <span class="material-symbols-outlined">save</span>
+            </button>
+
+        </form>
+
 	{% endfor %}
 </div>
     <br>
