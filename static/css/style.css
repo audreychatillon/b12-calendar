@@ -317,7 +317,24 @@ button {
     font-size: 18px;
     padding: 12px;
 }
+.dual-columns {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
 
+.col {
+    flex: 1;
+}
+
+.col-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.line {
+    padding: 2px 0;
+}
 /* calendrier = SEULE grille */
 .calendar {
     display: grid;
