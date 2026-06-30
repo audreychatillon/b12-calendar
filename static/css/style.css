@@ -408,7 +408,7 @@ button {
 .status-icon.absent {
     color: #ef4444;
 }
-.btn-continue {
+.btn-primary {
     background: transparent;
     border: 2px solid #000;
     color: #000;
@@ -423,7 +423,7 @@ button {
     transition: 0.2s;
 }
 
-.btn-continue:hover {
+.btn-primary:hover {
     background: #f2f2f2;
 }
 

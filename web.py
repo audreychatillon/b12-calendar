@@ -10,9 +10,11 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_TIME, "C")
 
-def format_date_fr(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-    return date_obj.strftime("%A %d %B %Y")
+def format_date_short(date_str):
+    return datetime.strptime(date_str, "%Y-%m-%d").strftime("%A %d")
+
+def format_date_long(date_str):
+    return datetime.strptime(date_str, "%Y-%m-%d").strftime("%A %d %B %Y")
 
 months_fr = {
     1: "Janvier", 2: "Février", 3: "Mars", 4: "Avril",
@@ -21,7 +23,10 @@ months_fr = {
 }
 
 app = Flask(__name__)
-app.jinja_env.globals.update(format_date_fr=format_date_fr)
+app.jinja_env.globals.update(
+    format_date_short=format_date_short,
+    format_date_long=format_date_long
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")

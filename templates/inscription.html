@@ -20,6 +20,7 @@
 
 <div class="page">
 	<h2>Inscription - {{ membre.nom }}</h2>
+        <a href="/" class="back-link">← Retour au calendrier</a>
 
 	<div class="events-list">
 	
@@ -29,7 +30,7 @@
 	
 	            <div class="event-info">
 	                <b>{{ event.titre }}</b><br>
-	                {{ event.date }} à {{ event.heure }}<br>
+	                {{ format_date_long(event["date"]) }} à {{ event.heure }}<br>
 	            </div>
 	
 	            <form method="POST" action="/inscription" class="status-form">
