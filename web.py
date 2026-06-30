@@ -428,6 +428,10 @@ def index():
 
     cursor.execute("SELECT id, nom FROM membres")
     membres = cursor.fetchall()
+
+    next_event = None
+    next_month_link = None 
+    next_month_label = None
     cursor.execute("""
         SELECT date
         FROM evenements
@@ -437,11 +441,10 @@ def index():
     """, (str(end),))
     
     next_event = cursor.fetchone()
-    
-    next_month_label = None
     if next_event:
         d = datetime.strptime(next_event["date"], "%Y-%m-%d")
         next_month_label = f"{months_fr[d.month]} {d.year}"
+        next_month_link = f"{d.year}-{d.month}"
     conn.close()
     
     return render_template(
@@ -455,6 +458,7 @@ def index():
         month=month,
         months_fr=months_fr,
         mois=f"{year:04d}-{month:02d}",
+        next_month_link=next_month_link,
         next_month_label=next_month_label
     )
 
