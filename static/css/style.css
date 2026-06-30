@@ -518,13 +518,12 @@ button {
 }
 
 .btn-save {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-left: auto;
+    background: #ebebeb;
+    color: #27ae60;
+}
+.btn-delete {
+    background: #f0f0f0;
+    color: #ef4444;
 }
 /* mobile = on garde multi-colonnes */
 @media (max-width: 600px) {

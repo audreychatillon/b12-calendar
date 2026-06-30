@@ -340,28 +340,6 @@ def membres():
 
     return render_template("membres.html", membres=membres)
 
-
-@app.route("/membres/update/<int:id>", methods=["POST"])
-def update_member(id):
-    nom = request.form.get("nom","").strip()
-    instruments = request.form.get("instruments","").strip()
-
-    conn = sqlite3.connect(DB)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        UPDATE membres
-        SET instruments = ?
-        WHERE id = ?
-    """, (instruments, id))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/membres")
-
-
-
 @app.route("/admin")
 def admin():
     return render_template("admin.html")
@@ -384,6 +362,65 @@ def admin_membres():
     conn.close()
 
     return render_template("admin_membres.html", membres=membres)
+
+@app.route("/admin/membres/add", methods=["POST"])
+def add_member():
+
+    nom = request.form["nom"].strip()
+    instruments = request.form["instruments"].strip()
+
+    if not nom:
+        return redirect("/admin/membres")
+
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO membres (nom, instruments)
+        VALUES (?, ?)
+    """, (nom, instruments))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin/membres")
+
+@app.route("/admin/membres/update/<int:id>", methods=["POST"])
+def update_member(id):
+
+    nom = request.form["nom"].strip()
+    instruments = request.form["instruments"].strip()
+
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE membres
+        SET nom = ?, instruments = ?
+        WHERE id = ?
+    """, (nom, instruments, id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin/membres")
+
+@app.route("/admin/membres/delete/<int:id>", methods=["POST"])
+def delete_member(id):
+
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    # On supprime d'abord les présences liées
+    cursor.execute("DELETE FROM presences WHERE membre_id = ?", (id,))
+
+    # Puis le membre
+    cursor.execute("DELETE FROM membres WHERE id = ?", (id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin/membres")
 
 @app.route("/")
 def index():

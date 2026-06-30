@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Membres</title>
+    <title>Gestion des membres</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
@@ -18,7 +18,7 @@
         <span class="material-symbols-outlined logo-yellow">
             groups
         </span>
-        Membres
+        Gestion des membres
     </h1>
 
     <img src="{{ url_for('static', filename='img/logo_b12.png') }}"
@@ -28,25 +28,57 @@
 </header>
 
 <div class="members-list">
+	<h2>Nouveau membre</h2>
+	
+	<form method="POST" action="/admin/membres/add">
+	
+	    <input type="text"
+	           name="nom"
+	           placeholder="Nom"
+	           required>
+	
+	    <input type="text"
+	           name="instruments"
+	           placeholder="Instruments">
+	
+	    <button type="submit" class="btn-primary">
+	        <span class="material-symbols-outlined">person_add</span>
+	        Ajouter
+	    </button>
+	
+	</form>
+	<h2>Liste</h2>
 	{% for m in membres %}
-        <form method="POST" action="/membres/update/{{ m['id'] }}" class="member-line">
-
-            <span class="member-name">{{ m['nom'] }}</span>
-
-            <input type="text"
-                   name="instruments"
-                   value="{{ m['instruments'] }}"
-                   placeholder="Instruments">
-
-            <button type="submit" class="btn-save">
-                <span class="material-symbols-outlined">save</span>
-            </button>
-
-        </form>
-
+		<form method="POST" action="/admin/membres/update/{{ m['id'] }}" class="member-line">
+		
+		    <input type="text"
+		           name="nom"
+		           value="{{ m['nom'] }}"
+		           placeholder="Nom">
+		
+		    <input type="text"
+		           name="instruments"
+		           value="{{ m['instruments'] }}"
+		           placeholder="Instruments">
+		
+		    <button type="submit" class="btn-save">
+		        <span class="material-symbols-outlined">save</span>
+		    </button>
+		
+		    <button type="submit"
+		            formaction="/admin/membres/delete/{{ m['id'] }}"
+		            formmethod="post"
+		            class="btn-delete"
+		            onclick="return confirm('Supprimer ce membre ?')">
+		        <span class="material-symbols-outlined">delete</span>
+		    </button>
+		
+		</form>
 	{% endfor %}
 </div>
-    <br>
-    <a href="/">← Retour au calendrier</a>
+
+
+<br>
+<a href="/">← Retour au calendrier</a>
 </body>
 </html>
