@@ -382,7 +382,7 @@ button {
 }
 .status-btn.present {
     border-color: #27ae60;
-    color: #27a260;
+    color: #27ae60;
 }
 .status-btn:hover {
     transform: translateY(-1px);
@@ -392,7 +392,22 @@ button {
     font-size: 16px;
     font-weight: 800;
 }
+.status-icon {
+    font-size: 22px;
+    vertical-align: middle;
+}
 
+.status-icon.present {
+    color: #27ae60;
+}
+
+.status-icon.pending {
+    color: #f59e0b;
+}
+
+.status-icon.absent {
+    color: #ef4444;
+}
 .btn-continue {
     background: transparent;
     border: 2px solid #000;
