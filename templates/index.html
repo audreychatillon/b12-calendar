@@ -55,16 +55,32 @@
 
 <div class="calendar">
     {% if events|length == 0 %}
+	<div class="empty-card">
+	
+	    <span class="material-symbols-outlined empty-icon">
+	        event_busy
+	    </span>
 	
 	    <div class="empty">
-	        Aucun événement ce mois-ci<br>
-        	{% if next_month_label %}
-        	    Prochain événement en {{ next_month_label }}
-        	{% else %}
-        	    Aucun événement à venir
-        	{% endif %}
+	        Aucun événement ce mois-ci
 	    </div>
 	
+	    <div class="empty-sub">
+	        {% if next_month_label %}
+	        	Prochain événement en {{ next_month_label }}
+	    		{% if next_month_link %}
+	    		    <a class="btn-next" href="/?mois={{ next_month_link }}">
+	    		        Voir le calendrier
+	    		    </a>
+	    		{% endif %}
+
+	        {% else %}
+	            Aucun événement à venir
+	        {% endif %}
+	    </div>
+	
+	
+	</div>	
     {% else %}
    	 {% for event in events %}
         	<div class="card {{ event['type'] }}">
