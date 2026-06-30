@@ -405,7 +405,8 @@ button {
     border-radius: 10px;
 
     background: white;
-    border: 2px solid transparent;
+    border: 2px solid #ddd;
+    color: black;
 
     font-size: 15px;
     font-weight: 700;
@@ -433,6 +434,10 @@ button {
 .status-btn span.count {
     font-size: 16px;
     font-weight: 800;
+}
+.status-btn.active {
+    border: 2px solid #f59e0b;
+    font-weight: bold;
 }
 .status-icon {
     font-size: 22px;
