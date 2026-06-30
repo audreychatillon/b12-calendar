@@ -54,80 +54,93 @@
 </div>
 
 <div class="calendar">
-    {% for event in events %}
-        <div class="card {{ event['type'] }}">
-            <div class="content">
-                <div class="title">
-                    {% if event['type'] == "repet" %}
-                        🎼 Répétition
-                    {% else %}
-                        🎺  🥁 Concert 🎸 🎷
-                    {% endif %}
-                </div>
+    {% if events|length == 0 %}
+	
+	    <div class="empty">
+	        Aucun événement ce mois-ci<br>
+        	{% if next_month_label %}
+        	    Prochain événement en {{ next_month_label }}
+        	{% else %}
+        	    Aucun événement à venir
+        	{% endif %}
+	    </div>
+	
+    {% else %}
+   	 {% for event in events %}
+        	<div class="card {{ event['type'] }}">
+        	    <div class="content">
+        	        <div class="title">
+        	            {% if event['type'] == "repet" %}
+        	                🎼 Répétition
+        	            {% else %}
+        	                🎺  🥁 Concert 🎸 🎷
+        	            {% endif %}
+        	        </div>
 
-                <div class="info">
-                    <a href="/edit/{{ event['id'] }}" class="event-link">
-                        {{ format_date_short(event["date"]) }} à {{ event["heure"] }}<br>
-                        <b>{{ event["titre"] }}</b><br>
-                        {{ event["lieu"] }}
-                    </a>
-                </div>
-            </div>
+        	        <div class="info">
+        	            <a href="/edit/{{ event['id'] }}" class="event-link">
+        	                {{ format_date_short(event["date"]) }} à {{ event["heure"] }}<br>
+        	                <b>{{ event["titre"] }}</b><br>
+        	                {{ event["lieu"] }}
+        	            </a>
+        	        </div>
+        	    </div>
 
-            <div class="actions-bottom">
+        	    <div class="actions-bottom">
 
-                <div class="status-row">
-                    <button class="status-btn absent"
-                            onclick="toggle('abs',{{ event['id'] }})">
-			<span class="material-symbols-outlined status-icon absent">
-                        cancel </span>
-                        <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
-                    </button>
-                
-                    <button class="status-btn pending"
-                            onclick="toggle('pend',{{ event['id'] }})">
-                        <span class="material-symbols-outlined status-icon pending">
-                        help </span>
-                        <span class="count">{{ stats_by_event[event['id']]['pending']  }}</span>
-                    </button>
-                
-                    <button class="status-btn present"
-                            onclick="toggle('pres',{{ event['id'] }})">
-                        <span class="material-symbols-outlined status-icon present">
-                        check_circle </span>
-                        <span class="count">{{ stats_by_event[event['id']]['present'] }}</span>
-                    </button>
-                </div>
-            </div>
+        	        <div class="status-row">
+        	            <button class="status-btn absent"
+        	                    onclick="toggle('abs',{{ event['id'] }})">
+				<span class="material-symbols-outlined status-icon absent">
+        	                cancel </span>
+        	                <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
+        	            </button>
+        	        
+        	            <button class="status-btn pending"
+        	                    onclick="toggle('pend',{{ event['id'] }})">
+        	                <span class="material-symbols-outlined status-icon pending">
+        	                help </span>
+        	                <span class="count">{{ stats_by_event[event['id']]['pending']  }}</span>
+        	            </button>
+        	        
+        	            <button class="status-btn present"
+        	                    onclick="toggle('pres',{{ event['id'] }})">
+        	                <span class="material-symbols-outlined status-icon present">
+        	                check_circle </span>
+        	                <span class="count">{{ stats_by_event[event['id']]['present'] }}</span>
+        	            </button>
+        	        </div>
+        	    </div>
 
-            <div id="abs{{ event['id'] }}" class="hidden">
-                {% set statuses = status_by_event[event['id']] %}
-                    {% for m in membres | sort(attribute='nom') %}
-                        {% if statuses.get(m['id']) == "absent" %}
-                            ✖ {{ m['nom'] }}<br>
-                        {% endif %}
-                    {% endfor %}
-            </div>
-            
-            <div id="pend{{ event['id'] }}" class="hidden">
-                {% set statuses = status_by_event.get(event['id'], {}) %}
-                {% for m in membres | sort(attribute='nom') %}
-                    {% if statuses.get(m['id']) not in ["present", "absent"] %}
-                        ? {{ m['nom'] }}<br>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            
-            <div id="pres{{ event['id'] }}" class="hidden">
-                {% set statuses = status_by_event[event['id']] %}
-                    {% for m in membres | sort(attribute='nom')%}
-                        {% if statuses.get(m['id']) == "present" %}
-                            ✔ {{ m['nom'] }}<br>
-                        {% endif %}
-                    {% endfor %}
-            </div>
-        </div>
-    {% endfor %}
+        	    <div id="abs{{ event['id'] }}" class="hidden">
+        	        {% set statuses = status_by_event[event['id']] %}
+        	            {% for m in membres | sort(attribute='nom') %}
+        	                {% if statuses.get(m['id']) == "absent" %}
+        	                    ✖ {{ m['nom'] }}<br>
+        	                {% endif %}
+        	            {% endfor %}
+        	    </div>
+        	    
+        	    <div id="pend{{ event['id'] }}" class="hidden">
+        	        {% set statuses = status_by_event.get(event['id'], {}) %}
+        	        {% for m in membres | sort(attribute='nom') %}
+        	            {% if statuses.get(m['id']) not in ["present", "absent"] %}
+        	                ? {{ m['nom'] }}<br>
+        	            {% endif %}
+        	        {% endfor %}
+        	    </div>
+        	    
+        	    <div id="pres{{ event['id'] }}" class="hidden">
+        	        {% set statuses = status_by_event[event['id']] %}
+        	            {% for m in membres | sort(attribute='nom')%}
+        	                {% if statuses.get(m['id']) == "present" %}
+        	                    ✔ {{ m['nom'] }}<br>
+        	                {% endif %}
+        	            {% endfor %}
+        	    </div>
+        	</div>
+	{% endfor %}
+    {% endif %}
 </div>
 
 <script>

@@ -391,14 +391,10 @@ def index():
         year, month = today.year, today.month
     start = date(year, month, 1)
     end = date(year, month, monthrange(year, month)[1])
-    print("ARGS:", request.args)
-    print("mois:", request.args.get("mois"))
-    print("year/month:", year, month)
 
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-
 
     query = """
     SELECT id, date, heure, titre, type, lieu
@@ -432,7 +428,20 @@ def index():
 
     cursor.execute("SELECT id, nom FROM membres")
     membres = cursor.fetchall()
-
+    cursor.execute("""
+        SELECT date
+        FROM evenements
+        WHERE date > ?
+        ORDER BY date ASC
+        LIMIT 1
+    """, (str(end),))
+    
+    next_event = cursor.fetchone()
+    
+    next_month_label = None
+    if next_event:
+        d = datetime.strptime(next_event["date"], "%Y-%m-%d")
+        next_month_label = f"{months_fr[d.month]} {d.year}"
     conn.close()
     
     return render_template(
@@ -445,7 +454,8 @@ def index():
         year=year,
         month=month,
         months_fr=months_fr,
-        mois=f"{year:04d}-{month:02d}"
+        mois=f"{year:04d}-{month:02d}",
+        next_month_label=next_month_label
     )
 
 if __name__ == "__main__":
