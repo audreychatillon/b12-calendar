@@ -203,6 +203,23 @@ form {
     gap: 8px;
     margin-top: 8px;
 }
+
+
+.nr-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+    margin: 8px 0;
+    font-weight: 600;
+    color: #9ca3af;   /* gris léger */
+}
+
+.nr-icon {
+    font-size: 18px;
+    color: #9ca3af;
+}
 .btn-status {
     background: white;
     color: black;

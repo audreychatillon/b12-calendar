@@ -140,7 +140,7 @@
 		       {% set statuses = status_by_event.get(event['id'], {}) %}
 		   
 		       <div class="col">
-		           <div class="col-title">? ne sait pas</div>
+		           <div class="col-title">? NSP</div>
 		           {% for m in membres | sort(attribute='nom') %}
 		               {% if statuses.get(m['id']) == "pending" %}
 		                   <div class="line">? {{ m['nom'] }}</div>
@@ -149,7 +149,7 @@
 		       </div>
 		   
 		       <div class="col">
-		           <div class="col-title">⚪ n'a pas répondu</div>
+		           <div class="col-title">⚪ NR </div>
 		           {% for m in membres | sort(attribute='nom') %}
 		               {% if statuses.get(m['id']) is none %}
 		                   <div class="line">{{ m['nom'] }} ⚪</div>

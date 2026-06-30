@@ -40,6 +40,16 @@
 	
 	                {% set current = presences.get(event.id, "") %}
 	
+			{% if current is none or current == "" %}
+			    <div class="nr-center">
+			        <span class="material-symbols-outlined nr-icon">
+			            radio_button_unchecked
+			        </span>
+			        non répondu [NR]
+			    </div>
+			{% endif %}
+
+
 	                <button name="statut" value="present"
 				onclick="sessionStorage.setItem('scrollY', window.scrollY)"
 	                        class="btn-status {% if current == 'present' %}active{% endif %}">
@@ -58,7 +68,7 @@
 				onclick="sessionStorage.setItem('scrollY', window.scrollY)"
 	                        class="btn-status {% if current == 'pending' %}active{% endif %}">
 			    <span class="material-symbols-outlined status-icon pending"> help </span>
-	                    ne sais pas
+	                    ne sais pas [NSP]
 	                </button>
 	
 	            </form>
