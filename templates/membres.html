@@ -27,22 +27,26 @@
 
 </header>
 
-<div class="page">
+<div class="members-list">
+	{% for m in membres %}
+        <form method="POST" action="/membres/update/{{ m['id'] }}" class="member-line">
 
-    <div class="coming-soon">
-        🚧 En cours de développement...
-    </div>
+            <span class="member-name">{{ m['nom'] }}</span>
 
-    <p style="text-align:center; margin-top:20px;">
-        Cette section permettra d'inscrire les musiciens du B12.
-    </p>
+            <input type="text"
+                   name="instruments"
+                   value="{{ m['instruments'] }}"
+                   placeholder="Instruments">
 
+            <button type="submit" class="btn-save">
+                <span class="material-symbols-outlined">save</span>
+            </button>
 
-    <br>
+        </form>
 
-    <a href="/" class="back-link">← Retour au calendrier</a>
-
+	{% endfor %}
 </div>
-
+    <br>
+    <a href="/">← Retour au calendrier</a>
 </body>
 </html>

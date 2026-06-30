@@ -262,7 +262,7 @@ def inscription_membre():
     return redirect(f"/inscription/membre/{membre_id}")
 
 @app.route("/inscription/membre/<int:membre_id>")
-def inscription_membrei_detail(membre_id):
+def inscription_membre_detail(membre_id):
 
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
@@ -326,55 +326,41 @@ def inscription_post():
     return redirect(f"/inscription/membre/{membre_id}")
 
 
-#@app.route("/inscription/<int:event_id>")
-#def inscription(event_id):
-#
-#    conn = sqlite3.connect(DB)
-#    conn.row_factory = sqlite3.Row
-#    cursor = conn.cursor()
-#
-#    cursor.execute("SELECT * FROM evenements WHERE id = ?", (event_id,))
-#    event = cursor.fetchone()
-#
-#    cursor.execute("""
-#        SELECT id, nom
-#        FROM membres
-#        ORDER BY nom COLLATE NOCASE
-#    """)
-#    membres = cursor.fetchall()
-#
-#    conn.close()
-#
-#    return render_template("inscription.html", event=event, membres=membres)
-#
-#@app.route("/inscription", methods=["POST"])
-#def inscription_post():
-#    print("🔥 POST INSCRIPTION REÇU")
-#    print(request.form)
-#    event_id = request.form["event_id"]
-#    membre_id = request.form["membre_id"]
-#    if not membre_id:
-#        return "B-douzien.ne obligatoire", 400
-#    statut = request.form["statut"]
-#
-#    conn = sqlite3.connect(DB)
-#    cursor = conn.cursor()
-#
-#    cursor.execute("""
-#        INSERT INTO presences (membre_id, evenement_id, statut)
-#        VALUES (?, ?, ?)
-#        ON CONFLICT(membre_id, evenement_id)
-#        DO UPDATE SET statut = excluded.statut
-#    """, (membre_id, event_id, statut))
-#
-#    conn.commit()
-#    conn.close()
-#
-#    return redirect("/")
 
-@app.route("/members")
-def members():
-    return render_template("members.html")
+@app.route("/membres")
+def membres():
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM membres ORDER BY nom COLLATE NOCASE")
+    membres = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("membres.html", membres=membres)
+
+
+@app.route("/membres/update/<int:id>", methods=["POST"])
+def update_member(id):
+    nom = request.form.get("nom","").strip()
+    instruments = request.form.get("instruments","").strip()
+
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE membres
+        SET instruments = ?
+        WHERE id = ?
+    """, (instruments, id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/membres")
+
+
 
 @app.route("/admin")
 def admin():

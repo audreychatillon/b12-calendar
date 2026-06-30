@@ -477,7 +477,55 @@ button {
     line-height: 1;      /* évite l’étirement vertical */
 }
 
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 700px;
+    margin: 0 auto;
+}
 
+.member-line {
+    display: flex; 
+    flex-direction: row;
+    align-items: center; 
+    gap: 12px;
+    padding: 6px 0;
+    justify-content: space-between;
+}
+
+.member-line span,
+.member-line input,
+.member-line button {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.member-line input {
+    width: auto;
+    min-width: 150px;
+    flex: 1;
+    max-width: 200px;
+}
+.member-line input[name="instruments"] {
+    flex: 2;
+}
+.member-name {
+    font-weight: 700;
+    color: #000;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.btn-save {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: auto;
+}
 /* mobile = on garde multi-colonnes */
 @media (max-width: 600px) {
     .calendar {
