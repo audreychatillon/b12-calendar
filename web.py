@@ -96,19 +96,19 @@ def get_stats_by_event(event_id):
     stats = {
         "present": 0,
         "absent": 0,
-        "nsp": 0
+        "pending": 0
     }
 
     for membre_id, statut in rows:
         if statut in stats:
             stats[statut] += 1
 
-    # les membres sans ligne = NSP
-    cursor = sqlite3.connect(DB).cursor()
-    cursor.execute("SELECT COUNT(*) FROM membres")
-    total = cursor.fetchone()[0]
+    ## les membres sans ligne = NSP
+    #cursor = sqlite3.connect(DB).cursor()
+    #cursor.execute("SELECT COUNT(*) FROM membres")
+    #total = cursor.fetchone()[0]
 
-    stats["nsp"] = total - (stats["present"] + stats["absent"])
+    #stats["pending"] = total - (stats["present"] + stats["absent"])
 
     return stats
 
@@ -215,6 +215,9 @@ def presence():
     membre_id = request.form["membre_id"]
     statut = request.form["statut"]
 
+    if statut not in ["present", "absent", "pending"]:
+        return "Statut invalide", 400
+
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
 
@@ -230,36 +233,77 @@ def presence():
 
     return redirect("/")
 
-@app.route("/inscription/<int:event_id>")
-def inscription(event_id):
+@app.route("/inscription")
+def inscription():
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, nom FROM membres ORDER BY nom COLLATE NOCASE")
+    membres = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("choix_membre.html", membres=membres)
+
+@app.route("/inscription/membre")
+def inscription_membre():
+
+    membre_id = request.args.get("membre_id")
+
+    if not membre_id:
+        return redirect("/inscription")
+
+    return redirect(f"/inscription/membre/{membre_id}")
+
+@app.route("/inscription/membre/<int:membre_id>")
+def inscription_membrei_detail(membre_id):
 
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM evenements WHERE id = ?", (event_id,))
-    event = cursor.fetchone()
+    cursor.execute("SELECT * FROM membres WHERE id = ?", (membre_id,))
+    membre = cursor.fetchone()
+
+    today = date.today()
 
     cursor.execute("""
-        SELECT id, nom
-        FROM membres
-        ORDER BY nom COLLATE NOCASE
-    """)
-    membres = cursor.fetchall()
+        SELECT id, date, heure, titre, type, lieu
+        FROM evenements
+        WHERE date >= ?
+        ORDER BY date, heure
+    """, (str(today),))
+
+    events = cursor.fetchall()
+
+    # récupérer les réponses existantes
+    cursor.execute("""
+        SELECT evenement_id, statut
+        FROM presences
+        WHERE membre_id = ?
+    """, (membre_id,))
+
+    presences = {row["evenement_id"]: row["statut"] for row in cursor.fetchall()}
 
     conn.close()
 
-    return render_template("inscription.html", event=event, membres=membres)
+    return render_template(
+        "inscription.html",
+        membre=membre,
+        events=events,
+        presences=presences
+    )
 
 @app.route("/inscription", methods=["POST"])
 def inscription_post():
-    print("🔥 POST INSCRIPTION REÇU")
-    print(request.form)
+
     event_id = request.form["event_id"]
     membre_id = request.form["membre_id"]
-    if not membre_id:
-        return "B-douzien.ne obligatoire", 400
     statut = request.form["statut"]
+
+    if statut not in ["present", "absent", "pending"]:
+        return "Statut invalide", 400
 
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
@@ -274,7 +318,54 @@ def inscription_post():
     conn.commit()
     conn.close()
 
-    return redirect("/")
+    return redirect(f"/inscription/membre/{membre_id}")
+
+
+#@app.route("/inscription/<int:event_id>")
+#def inscription(event_id):
+#
+#    conn = sqlite3.connect(DB)
+#    conn.row_factory = sqlite3.Row
+#    cursor = conn.cursor()
+#
+#    cursor.execute("SELECT * FROM evenements WHERE id = ?", (event_id,))
+#    event = cursor.fetchone()
+#
+#    cursor.execute("""
+#        SELECT id, nom
+#        FROM membres
+#        ORDER BY nom COLLATE NOCASE
+#    """)
+#    membres = cursor.fetchall()
+#
+#    conn.close()
+#
+#    return render_template("inscription.html", event=event, membres=membres)
+#
+#@app.route("/inscription", methods=["POST"])
+#def inscription_post():
+#    print("🔥 POST INSCRIPTION REÇU")
+#    print(request.form)
+#    event_id = request.form["event_id"]
+#    membre_id = request.form["membre_id"]
+#    if not membre_id:
+#        return "B-douzien.ne obligatoire", 400
+#    statut = request.form["statut"]
+#
+#    conn = sqlite3.connect(DB)
+#    cursor = conn.cursor()
+#
+#    cursor.execute("""
+#        INSERT INTO presences (membre_id, evenement_id, statut)
+#        VALUES (?, ?, ?)
+#        ON CONFLICT(membre_id, evenement_id)
+#        DO UPDATE SET statut = excluded.statut
+#    """, (membre_id, event_id, statut))
+#
+#    conn.commit()
+#    conn.close()
+#
+#    return redirect("/")
 
 @app.route("/members")
 def members():

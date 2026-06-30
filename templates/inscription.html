@@ -9,57 +9,58 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 
-<body class="page-inscription {% if event['type'] == 'concert' %}concert{% else %}repet{% endif %}">
+<body class="page-add">
 <header class="site-header">
-    {% if event['type'] == 'concert' %}
-        <h1 class="site-title">
-	🎺 🥁 
-        <span class="material-symbols-outlined">edit_calendar</span>
-	Inscription 🎸🎷
-	</h1>
-    {% else %}
-        <h1 class="site-title">
-	🎼 
-        <span class="material-symbols-outlined">edit_calendar</span>
-	Inscription
-	</h1>
-    {% endif %}
+    <h1 class="site-title">
+    <span class="material-symbols-outlined">edit_calendar</span>
+	Inscription 
+     </h1>
     <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo">
 </header>
 
 <div class="page">
+	<h2>Inscription - {{ membre.nom }}</h2>
 
-    <p>
-        <strong>{{ event["titre"] }}</strong><br>
-        {{ format_date_fr(event["date"]) }} à {{ event["heure"] }}
-    </p>
-
-    <form method="POST" action="/inscription">
-
-        <input type="hidden" name="event_id" value="{{ event['id'] }}">
-
-        <!-- Musicien -->
-        <label for="membre_id">Musicien</label>
-        <select name="membre_id" id="membre_id" required>
-            <option value="" selected disabled>
-                -- Choisir un.e B-douzien.ne --
-            </option>
-            {% for m in membres %}
-                <option value="{{ m['id'] }}">{{ m['nom'] }}</option>
-            {% endfor %}
-        </select>
-
-        <!-- Participation -->
-        <label for="statut">Participation</label>
-        <select name="statut" id="statut">
-            <option value="present"> Je serai présent.e ✅ </option>
-            <option value="absent"> Je serai absent.e ❌</option>
-            <option value="nsp">Je ne sais pas (encore)❓</option>
-        </select>
-
-        <button type="submit">Valider</button>
-
-    </form>
+	<div class="events-list">
+	
+	    {% for event in events %}
+	
+	        <div class="event-card {{ event.type }}">
+	
+	            <div class="event-info">
+	                <b>{{ event.titre }}</b><br>
+	                {{ event.date }} à {{ event.heure }}<br>
+	            </div>
+	
+	            <form method="POST" action="/inscription" class="status-form">
+	
+	                <input type="hidden" name="event_id" value="{{ event.id }}">
+	                <input type="hidden" name="membre_id" value="{{ membre.id }}">
+	
+	                {% set current = presences.get(event.id, "") %}
+	
+	                <button name="statut" value="present"
+	                        class="btn-status {% if current == 'present' %}active{% endif %}">
+	                    présent.e ✅
+	                </button>
+	
+	                <button name="statut" value="absent"
+	                        class="btn-status {% if current == 'absent' %}active{% endif %}">
+	                    absent.e ❌
+	                </button>
+	
+	                <button name="statut" value="pending"
+	                        class="btn-status {% if current == 'pending' %}active{% endif %}">
+	                    ne sais pas ❓
+	                </button>
+	
+	            </form>
+	
+	        </div>
+	
+	    {% endfor %}
+	
+	</div>
     <br>
     <a href="/">← Retour au calendrier</a>
 </div>

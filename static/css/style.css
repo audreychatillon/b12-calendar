@@ -143,6 +143,44 @@ form {
     font-size: 34px;
 }
 
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.event-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+.status-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.btn-status {
+    background: white;
+    color: black;
+
+    border: 2px solid #ddd;
+    border-radius: 20px;
+
+    padding: 6px 14px;
+    cursor: pointer;
+
+    font-weight: 600;
+    transition: 0.2s;
+}
+.btn-status.active {
+    border: 2px solid #ffd400;
+    background: #fffbe6;   /* très léger jaune */
+}
+.btn-status:hover {
+    border-color: #ffd400;
+}
 input:not([type="date"]):not([type="time"]),
 select,
 button {
@@ -354,6 +392,26 @@ button {
     font-size: 16px;
     font-weight: 800;
 }
+
+.btn-continue {
+    background: transparent;
+    border: 2px solid #000;
+    color: #000;
+
+    padding: 8px 14px;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-continue:hover {
+    background: #f2f2f2;
+}
+
 
 .status-btn.inscription {
     border-color: #2c3e50;
