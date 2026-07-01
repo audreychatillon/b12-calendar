@@ -3,51 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Membres</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 
-<body>
-
+<body class="page-add">
 <header class="site-header">
-
     <h1 class="site-title">
         <span class="material-symbols-outlined logo-yellow">groups</span>
         Membres
     </h1>
-
-    <img src="{{ url_for('static', filename='img/logo_b12.png') }}"
-         class="logo"
-         alt="B12">
-
+    <img src="{{ url_for('static', filename='img/logo_b12.png') }}" class="site-logo">
 </header>
 
-<div class="members-list">
-	{% for m in membres %}
-        	<div class="member-item">
-
-        	    <div class="member-name">
-        	        {{ m['nom'] }}
-        	    </div>
-
-        	    {% if m['instruments'] %}
-        	        <div class="member-instruments">
-        	            {{ m['instruments'] }}
-        	        </div>
-        	    {% endif %}
-
-        	</div>
-	{% endfor %}
+<div class="page">
+	<div class="members-list">
+		{% for m in membres %}
+	        	<div class="member-item">
+	
+	        	    <div class="member-name">
+	        	        {{ m['nom'] }}
+	        	    </div>
+	
+	        	    {% if m['instruments'] %}
+	        	        <div class="member-instruments">
+	        	            {{ m['instruments'] }}
+	        	        </div>
+	        	    {% endif %}
+	
+	        	</div>
+		{% endfor %}
+	</div>
+	    <br>
+	<div class="members-list">
+		<h2> B12 un jour, B12 toujours </h2>
+	rajouter Marianne et Michel...
+	<div>
+	    <br>
+	    <a href="/">← Retour au calendrier</a>
 </div>
-    <br>
-<div class="members-list">
-	<h2> B12 un jour, B12 toujours </h2>
-rajouter Marianne et Michel...
-<div>
-    <br>
-    <a href="/">← Retour au calendrier</a>
 </body>
 </html>
