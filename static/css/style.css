@@ -521,7 +521,7 @@ button {
     flex-direction: column;
     gap: 8px;
     max-width: 700px;
-    margin: 10px auto;
+    margin: 10px 20px;
 }
 
 .member-line {
