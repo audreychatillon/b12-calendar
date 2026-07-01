@@ -151,8 +151,8 @@
 		       <div class="col">
 		           <div class="col-title">⚪ NR </div>
 		           {% for m in membres | sort(attribute='nom') %}
-		               {% if statuses.get(m['id']) is none %}
-		                   <div class="line">{{ m['nom'] }} ⚪</div>
+		               {% if m['status'] == 'active' and statuses.get(m['id']) is none %}
+		                   <div class="line">{{ m['nom'] }}</div>
 		               {% endif %}
 		           {% endfor %}
 		       </div>

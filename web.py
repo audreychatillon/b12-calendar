@@ -475,7 +475,7 @@ def index():
         status_by_event[event_id] = get_status_by_event(event_id)
         stats_by_event[event["id"]] = get_stats_by_event(event["id"])
 
-    cursor.execute("SELECT id, nom FROM membres")
+    cursor.execute("SELECT id, nom, status FROM membres")
     membres = cursor.fetchall()
 
     next_event = None
