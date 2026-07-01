@@ -48,7 +48,9 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS membres (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom TEXT
+        nom TEXT,
+        instruments TEXT,
+        status TEXT
     )
     """)
 
@@ -366,19 +368,23 @@ def admin_membres():
 @app.route("/admin/membres/add", methods=["POST"])
 def add_member():
 
-    nom = request.form["nom"].strip()
-    instruments = request.form["instruments"].strip()
+    nom = request.form.get("nom","").strip()
+    instruments = request.form.get("instruments","").strip()
+    status = request.form.get("status","active").strip()
 
     if not nom:
         return redirect("/admin/membres")
+
+    if status not in ["active", "guest", "former"]:
+        status = "active"
 
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO membres (nom, instruments)
-        VALUES (?, ?)
-    """, (nom, instruments))
+        INSERT INTO membres (nom, instruments, status)
+        VALUES (?, ?, ?)
+    """, (nom, instruments, status))
 
     conn.commit()
     conn.close()
@@ -390,15 +396,16 @@ def update_member(id):
 
     nom = request.form["nom"].strip()
     instruments = request.form["instruments"].strip()
+    status = request.form["status"].strip()
 
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
 
     cursor.execute("""
         UPDATE membres
-        SET nom = ?, instruments = ?
+        SET nom = ?, instruments = ?, status = ?
         WHERE id = ?
-    """, (nom, instruments, id))
+    """, (nom, instruments, status, id))
 
     conn.commit()
     conn.close()

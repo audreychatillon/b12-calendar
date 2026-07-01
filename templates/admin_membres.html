@@ -41,6 +41,12 @@
 	           name="instruments"
 	           placeholder="Instruments">
 	
+   	    <select name="status" required>
+    	        <option value="active">Actif</option>
+    	        <option value="guest">Invité</option>
+    	        <option value="former">Ancien membre</option>
+    	    </select>	
+	
 	    <button type="submit" class="btn-primary">
 	        <span class="material-symbols-outlined">person_add</span>
 	        Ajouter
@@ -61,6 +67,12 @@
 		           value="{{ m['instruments'] }}"
 		           placeholder="Instruments">
 		
+   	            <select name="status">
+    		        <option value="active" {% if m['status'] == 'active' %}selected{% endif %}> Actif</option>
+    		        <option value="guest"  {% if m['status'] == 'guest'  %}selected{% endif %}>Invité</option>
+    		        <option value="former" {% if m['status'] == 'former' %}selected{% endif %}>Ancien membre</option>
+    		    </select>	
+
 		    <button type="submit" class="btn-save">
 		        <span class="material-symbols-outlined">save</span>
 		    </button>
