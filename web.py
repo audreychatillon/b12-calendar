@@ -246,7 +246,7 @@ def inscription():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, nom FROM membres ORDER BY nom COLLATE NOCASE")
+    cursor.execute("SELECT id, nom, status FROM membres ORDER BY nom COLLATE NOCASE")
     membres = cursor.fetchall()
 
     conn.close()

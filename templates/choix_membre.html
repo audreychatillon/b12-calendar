@@ -31,9 +31,11 @@
 	        <option value="">-- Choisir un musicien --</option>
 	
 	        {% for m in membres %}
-	            <option value="{{ m.id }}">
-	                {{ m.nom }}
-	            </option>
+		    {% if m['status'] != "former" %}
+	               <option value="{{ m.id }}">
+	                   {{ m.nom }}
+	               </option>
+		    {% endif %}
 	        {% endfor %}
 	    </select>
 	
