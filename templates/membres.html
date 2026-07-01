@@ -21,6 +21,7 @@
 <div class="page">
 	<div class="members-list">
 		{% for m in membres %}
+		    {%if m['status'] == 'active' %}
 	        	<div class="member-item">
 	
 	        	    <div class="member-name">
@@ -34,12 +35,48 @@
 	        	    {% endif %}
 	
 	        	</div>
+		   {% endif %}
 		{% endfor %}
 	</div>
-	    <br>
+	<div class="members-list">
+		<h2> Les invités du B12 </h2>
+		{% for m in membres %}
+		    {%if m['status'] == 'guest' %}
+	        	<div class="member-item">
+	
+	        	    <div class="member-name">
+	        	        {{ m['nom'] }}
+	        	    </div>
+	
+	        	    {% if m['instruments'] %}
+	        	        <div class="member-instruments">
+	        	            {{ m['instruments'] }}
+	        	        </div>
+	        	    {% endif %}
+	
+	        	</div>
+		   {% endif %}
+		{% endfor %}
+	<div>
 	<div class="members-list">
 		<h2> B12 un jour, B12 toujours </h2>
-	rajouter Marianne et Michel...
+		{% for m in membres %}
+		    {%if m['status'] == 'former' %}
+	        	<div class="member-item">
+	
+	        	    <div class="member-name">
+	        	        {{ m['nom'] }}
+	        	    </div>
+	
+	        	    {% if m['instruments'] %}
+	        	        <div class="member-instruments">
+	        	            {{ m['instruments'] }}
+	        	        </div>
+	        	    {% endif %}
+	
+	        	</div>
+		   {% endif %}
+		{% endfor %}
 	<div>
 	    <br>
 	    <a href="/">← Retour au calendrier</a>
