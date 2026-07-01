@@ -511,7 +511,7 @@ button {
     color: #ef4444;
 }
 .btn-primary {
-    background: transparent;
+    background: white;
     border: 2px solid #000;
     color: #000;
 
@@ -526,16 +526,11 @@ button {
 }
 
 .btn-primary:hover {
+    border-color: #ffd400;
     background: #f2f2f2;
 }
 
 
-.status-btn.inscription {
-    border-color: #2c3e50;
-    color: #2c3e50;
-    padding: 4px 10px;   /* ↓ réduit la hauteur uniquement ici */
-    line-height: 1;      /* évite l’étirement vertical */
-}
 
 .members-list {
     display: flex;
