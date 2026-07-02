@@ -29,17 +29,17 @@
     <form method="post">
 
         <div class="field">
-            <label>Date :</label>
+            <label class="form-label">Date :</label>
             <input type="date" name="date" value="{{ event['date'] }}" required>
         </div>
 
         <div class="field">
-            <label>Heure :</label>
+            <label class="form-label">Heure :</label>
             <input type="time" name="heure" value="{{ event['heure'] }}" required>
         </div>
 
         <div class="field">
-            <label>Type :</label>
+            <label class="form-label">Type :</label>
             <select name="type" required>
                     <option value="repet" {% if event['type'] == 'repet' %}selected{% endif %}>
                         Répétition
@@ -51,12 +51,12 @@
         </div>
 
         <div class="field">
-            <label>Titre :</label>
+            <label class="form-label">Titre :</label>
             <input name="titre" value="{{ event['titre'] }}" required>
         </div>
 
         <div class="field">
-            <label>Lieu :</label>
+            <label class="form-label">Lieu :</label>
             <input name="lieu" value="{{ event['lieu'] }}">
         </div>
 
