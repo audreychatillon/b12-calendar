@@ -1,5 +1,8 @@
-/* ========= ======= ========= */
-/* ========= GENERAL ========= */
+/* === ====================================================================================================== */
+/* ===         ============================================================================================== */
+/* === GENERAL ============================================================================================== */ 
+/* ===         ============================================================================================== */
+/* === ====================================================================================================== */
 
 * {
     box-sizing: border-box;
@@ -12,25 +15,163 @@ body {
     overflow-x: hidden;
 }
 
-
-
-
-
-/* ========= ========== ========= */
-/* ========= CALENDRIER ========= */
-
-/* --- no event in the month --- */
-.empty {
-    text-align: center;
-    color: #000;
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- lien avance/retour vers calendrier ------------------------------------------------------------------- */
+.back-calendar {
+    color: #0000cc;
     font-weight: 600;
-
-    padding: 30px 20px;
-    margin: 20px 0;
-
-    font-size: 1.1rem;
-    line-height: 1.5;
+    background: rgba(255,255,255,0.6);
+    padding: 4px 8px;
+    border-radius: 6px;
 }
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- la barre du titre en haut des pages ------------------------------------------------------------------ */
+.site-header {
+    background: linear-gradient(90deg, #000 0%, #111 100%); /* noir */
+    padding: 8px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.site-title {
+    color: #ffd400;    /* jaune */
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-align: left;
+    margin-bottom: 8px;
+}
+.site-logo {
+    height: 50px; 
+    width: auto;
+    transition: transform 0.15s;
+}
+.site-logo:hover {
+    transform: scale(1.05);
+}
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- fond de la pochette CD ------------------------------------------------------------------------------- */
+.b12cd-bg {
+    min-height: 100vh;
+    background-image: url("../img/couverture_noire.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 10px;
+}
+.b12cd-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.75);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.b12cd-bg > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* === ====================================================================================================== */
+/* ===            =========================================================================================== */
+/* === CALENDRIER =========================================================================================== */
+/* ===            =========================================================================================== */
+/* === ====================================================================================================== */
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- navigation par mois ---------------------------------------------------------------------------------- */
+.month-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0 20px;
+}
+.month-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    position: relative;
+    top: -6px;
+}
+.nav-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid black;
+    border-radius: 50%;
+
+    background: black;
+    color: #ffd400;
+
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-btn:hover {
+    background: #e0e0e0;
+    color: black;
+}
+.nav-btn .material-symbols-outlined {
+    font-size: 28px;
+    line-height: 1;
+}
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- les filtres par type d'événements -------------------------------------------------------------------- */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.filters a {
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+
+    border: 1px solid #ddd;
+    border-radius: 20px;
+
+    color: #333;
+    background: #f5f5f5;
+
+    transition: all 0.2s ease;
+}
+.filters a:hover {
+    background: #f3f3f3;
+}
+.filters a.active {
+    border: 3px solid #ffd400;
+    box-shadow: 0 0 6px rgba(255, 212, 0, 0.5);
+    font-weight: 700;
+}
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- grille du calendrier --------------------------------------------------------------------------------- */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- no event in the month -------------------------------------------------------------------------------- */
 .empty-card {
     display: flex;
     flex-direction: column;
@@ -43,63 +184,116 @@ body {
     border-radius: 12px;
     background: #f9f9f9;
 }
-
 .empty-icon {
     font-size: 40px;
     color: #000;
     margin-bottom: 10px;
 }
-
-.empty-title {
-    font-weight: 700;
+.empty {
+    text-align: center;
     color: #000;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-}
+    font-weight: 600;
 
+    padding: 30px 20px;
+    margin: 20px 0;
+
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
 .empty-sub {
     font-weight: 400;
     color: #444;
     font-size: 0.95rem;
 }
 
-
-
-/* ========= ======== ========= */
-/* ========= MODIFIER ========= */
-body.repet {
-    background: #e8f2ff; 
-}
-body.repet .page {
+/* --- ------------------------------------------------------------------------------------------------------ */
+/* --- cards per event -------------------------------------------------------------------------------------- */
+.card {
     background: white;
-    border-left: 4px solid #4a90e2;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-width: 0;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height:100%;
 }
+.title {
+    margin: -10px -10px 8px -10px;
+    padding: 6px 10px;
+
+    font-weight: 600;
+
+    border-radius: 12px 12px 0 0;
+}
+.info {
+    margin-bottom: 6px;
+}
+.card.concert .title {
+    background: linear-gradient(135deg, #e5e7eb,#ffd400);
+    color: #111;
+}
+.card.concert {
+    background: linear-gradient(135deg, #f3f4f6, #fff7cc);
+    border-left: 5px solid #ffd400; /* jaune */
+}
+.card.repet .title {
+    background: linear-gradient(135deg, #f3f4f6, #374151);
+    color: #111;
+}
+.card.repet {
+    background: linear-gradient(135deg, #f3f4f6, #dbeafe);
+    color: #374151;
+    border-left: 5px solid #9ca3af;   
+}
+
+
+/* === ====================================================================================================== */
+/* ===          ============================================================================================= */
+/* === MODIFIER ============================================================================================= */
+/* ===          ============================================================================================= */
+/* === ====================================================================================================== */
 
 body.concert {
-    background: #fff1e0; /* orange clair */
+    background: linear-gradient(135deg, #e5e7eb,#ffd400);
 }
 body.concert .page {
     background: white;
-    border-left: 4px solid #ff8c42;
+    border-left: 5px solid #ffd400; /* jaune */
+}
+body.repet {
+    background: linear-gradient(135deg, #f3f4f6, #dbeafe);
+}
+body.repet .page {
+    background: white;
+    border-left: 5px solid #9ca3af;   
 }
 
 
-/* ========= ======= ========= */
-/* ========= AJOUTER ========= */
+
+/* === ====================================================================================================== */
+/* === AJOUTER ========= */
+/* === ====================================================================================================== */
 
 
-/* ========= =========== ========= */
-/* ========= INSCRIPTION ========= */
-
-
-
-/* ========= ======= ========= */
-/* ========= MEMBRES ========= */
+/* === ====================================================================================================== */
+/* === INSCRIPTION ========= */
+/* === ====================================================================================================== */
 
 
 
-/* ========= ===== ========= */
-/* ========= ADMIN ========= */
+/* === ====================================================================================================== */
+/* === MEMBRES ========= */
+/* === ====================================================================================================== */
+
+
+
+/* === ====================================================================================================== */
+/* === ADMIN ========= */
+/* === ====================================================================================================== */
 
 
 /*  A RANGER EN DESSOUS   */
@@ -118,82 +312,12 @@ form {
     flex-direction: column;
     gap: 12px;
 }
-.month-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin: 10px 0 20px;
-}
-
-.month-title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    position: relative;
-    top: -6px;
-}
-
-.nav-btn {
-    width: 34px;
-    height: 34px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 2px solid black;
-    border-radius: 50%;
-
-    background: black;
-    color: #ffd400;
-
-    text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.nav-btn:hover {
-    background: #e0e0e0;
-    color: black;
-}
-
-.nav-btn .material-symbols-outlined {
-    font-size: 28px;
-    line-height: 1;
-}
 
 
-.filters {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
 
-.filters a {
-    text-decoration: none;
-    font-size: 14px;
-    padding: 6px 12px;
 
-    border: 1px solid #ddd;
-    border-radius: 20px;
 
-    color: #333;
-    background: #f5f5f5;
 
-    transition: all 0.2s ease;
-}
-
-.filters a:hover {
-    background: #f3f3f3;
-}
-
-.filters a.active {
-    border: 3px solid #ffd400;
-    box-shadow: 0 0 6px rgba(255, 212, 0, 0.5);
-    font-weight: 700;
-}
 
 .bottom-nav {
     position: fixed;
@@ -311,35 +435,6 @@ button {
     font-size: 0.9em;
     color: #333;
 }
-.site-header {
-    background: linear-gradient(90deg, #000 0%, #111 100%);
-    padding: 8px 24px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.site-header h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
-}
-
-.site-title {
-    color: #ffd400;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin: 0;
-    font-size: 22px;
-    text-align: left;
-}
-.site-logo {
-    height: 50px; 
-    width: auto;
-    transition: transform 0.15s;
-}
-.site-logo:hover {
-    transform: scale(1.05);
-}
 .actions-bottom{
     margin-top:auto;
 }
@@ -394,77 +489,6 @@ button {
 
 .line {
     padding: 2px 0;
-}
-/* calendrier = SEULE grille */
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 10px;
-
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
-.calendar-bg {
-    min-height: 100vh;
-    background-image: url("../img/couverture_noire.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-    padding: 10px;
-}
-.calendar-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.75);
-    border-radius: 12px;
-    z-index: 0;
-}
-
-.calendar-bg > * {
-    position: relative;
-    z-index: 1;
-}
-/* cards */
-.title {
-    margin: -10px -10px 8px -10px;
-    padding: 6px 10px;
-
-    font-weight: 600;
-
-    border-radius: 12px 12px 0 0;
-}
-.card {
-    background: white;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    min-width: 0;
-    overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-
-    min-height:100%;
-}
-.card.repet .title {
-    background: #d7e9ff;
-}
-.card.repet {
-    background: #eaf3ff;
-    border-left: 5px solid #3498db;
-}
-.card.concert .title {
-    background: #ffe4c7;
-}
-.card.concert {
-    background: #fff3e6;
-    border-left: 5px solid #e67e22;
-}
-.info {
-    margin-bottom: 6px;
 }
 /* boutons */
 .button {
@@ -623,18 +647,13 @@ button {
     background: #f0f0f0;
     color: #ef4444;
 }
-
-/* ========= =========================== ========= */
-/* =========  lien Retour au calendrier  ========= */
-/* ========= =========================== ========= */
-
-.back-calendar {
+.empty-title {
+    font-weight: 700;
     color: #000;
-    font-weight: 600;
-    background: rgba(255,255,255,0.6);
-    padding: 4px 8px;
-    border-radius: 6px;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
 }
+
 
 /* ========= ================================= ========= */
 /* =========  mobile = on garde multi-colonnes ========= */

@@ -9,18 +9,18 @@
     <title> Calendrier </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
 <header class="site-header">
     <h1 class="site-title">
     <span class="material-symbols-outlined">calendar_month</span>
     Le calendrier du B12</h1>
-    <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo" alt="B12 logo">
+    <img src="{{ url_for('static', filename='img/b12.png') }}" class="site-logo" alt="logo noir et jaune du B12">
 </header>
 
 
 <div class="month-nav">
-
     <a class="nav-btn"
        href="/?mois={{ (year-1) if month==1 else year }}-{{ '%02d' % (12 if month==1 else month-1) }}&filtre={{ filtre }}">
         <span class="material-symbols-outlined">chevron_left</span>
@@ -34,11 +34,9 @@
        href="/?mois={{ (year+1) if month==12 else year }}-{{ '%02d' % (1 if month==12 else month+1) }}&filtre={{ filtre }}">
         <span class="material-symbols-outlined">chevron_right</span>
     </a>
-
 </div>
 
 <div class="filters">
-
 	<a href="/?mois={{ year }}-{{ '%02d' % month }}" class="{% if filtre == 'tout' %}active{% endif %}">
 	    Tous
 	</a>
@@ -52,24 +50,19 @@
 	</a>
 </div>
 
-<div class="calendar-bg">
+<div class="b12cd-bg">
 <div class="calendar">
+
     {% if events|length == 0 %}
+
 	<div class="empty-card">
-	
-	    <span class="material-symbols-outlined empty-icon">
-	        event_busy
-	    </span>
-	
-	    <div class="empty">
-	        Aucun événement ce mois-ci
-	    </div>
-	
+	    <span class="material-symbols-outlined empty-icon">event_busy</span>
+	    <div class="empty">Aucun événement ce mois-ci</div>
 	    <div class="empty-sub">
 	        {% if next_month_label %}
 	        	Prochain événement en {{ next_month_label }} <br>
 	    		{% if next_month_link %}
-	    		    <a class="btn-next" href="/?mois={{ next_month_link }}">
+	    		    <a href="/?mois={{ next_month_link }}" class="back-calendar">
 	    		        Voir le calendrier
 	    		    </a>
 	    		{% endif %}
@@ -79,25 +72,25 @@
 	        {% endif %}
 	    </div>
 	</div>	
+    
     {% else %}
-   	 {% for event in events %}
-        	<div class="card {{ event['type'] }}">
-        	    <div class="content">
-        	        <div class="title">
-        	            {% if event['type'] == "repet" %}
-        	                🎼 Répétition
-        	            {% else %}
-        	                🎺  🥁 Concert 🎸 🎷
-        	            {% endif %}
-        	        </div>
 
-        	        <div class="info">
-        	            <a href="/edit/{{ event['id'] }}" class="event-link">
-        	                {{ format_date_short(event["date"]) }} à {{ event["heure"] }}<br>
-        	                <b>{{ event["titre"] }}</b><br>
-        	                {{ event["lieu"] }}
-        	            </a>
-        	        </div>
+   	    {% for event in events %}
+        	<div class="card {{ event['type'] }}">
+        	    <div class="title">
+        	        {% if event['type'] == "repet" %}
+        	            🎼 Répétition
+        	        {% else %}
+        	            🎺  🥁 Concert 🎸 🎷
+        	        {% endif %}
+        	    </div>
+
+        	    <div class="info">
+        	        <a href="/edit/{{ event['id'] }}" class="event-link">
+        	            {{ format_date_short(event["date"]) }} à {{ event["heure"] }}<br>
+        	            <b>{{ event["titre"] }}</b><br>
+        	            {{ event["lieu"] }}
+        	        </a>
         	    </div>
 
         	    <div class="actions-bottom">
@@ -169,6 +162,7 @@
         	    </div>
         	</div>
 	{% endfor %}
+
     {% endif %}
 </div>
 </div>
