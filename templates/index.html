@@ -98,7 +98,7 @@
         	        <div class="status-row">
         	            <button class="status-btn absent"
         	                    onclick="toggle('abs',{{ event['id'] }})">
-				<span class="material-symbols-outlined status-icon absent">
+				            <span class="material-symbols-outlined status-icon absent">
         	                cancel </span>
         	                <span class="count">{{ stats_by_event[event['id']]['absent'] }}</span>
         	            </button>
@@ -121,6 +121,7 @@
 
         	    <div id="abs{{ event['id'] }}" class="hidden">
         	        {% set statuses = status_by_event[event['id']] %}
+                    <b>absent.e.s</b><br>
         	            {% for m in membres | sort(attribute='nom') %}
         	                {% if statuses.get(m['id']) == "absent" %}
         	                    ✖ {{ m['nom'] }}<br>
@@ -154,6 +155,7 @@
  
         	    <div id="pres{{ event['id'] }}" class="hidden">
         	        {% set statuses = status_by_event[event['id']] %}
+                    <b>présent.e.s</b><br>
         	            {% for m in membres | sort(attribute='nom')%}
         	                {% if statuses.get(m['id']) == "present" %}
         	                    ✔ {{ m['nom'] }}<br>
