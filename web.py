@@ -327,6 +327,10 @@ def inscription_post():
 
     return redirect(f"/inscription/membre/{membre_id}")
 
+@app.route("/partitions")
+def partitions():
+    return render_template("partitions.html")
+
 
 
 @app.route("/membres")
