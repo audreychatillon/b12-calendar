@@ -43,8 +43,8 @@ def get_status_by_event(event_id):
 
     status_map = {}
 
-    for membre_id, statut in rows:
-        status_map[membre_id] = statut
+    for row in rows:
+        status_map[row["membre_id"]] = row["statut"]
 
     return status_map
 
@@ -67,7 +67,9 @@ def get_stats_by_event(event_id):
         "pending": 0
     }
 
-    for membre_id, statut in rows:
+    for row in rows:
+        statut = row["statut"]
+        print("DEBUG STATUT", statut)
         if statut in stats:
             stats[statut] += 1
 
@@ -84,7 +86,7 @@ def get_status(event_id,statut):
         WHERE evenement_id = %s AND statut = %s
     """, (event_id,statut))
 
-    resultat = [row[0] for row in cursor.fetchall()]
+    resultat = [row["membre_id"] for row in cursor.fetchall()]
     conn.close()
     return resultat
 
@@ -197,7 +199,7 @@ def inscription():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, nom, status FROM membres ORDER BY nom COLLATE NOCASE")
+    cursor.execute("SELECT id, nom, status FROM membres ORDER BY LOWER(nom)")
     membres = cursor.fetchall()
 
     conn.close()
