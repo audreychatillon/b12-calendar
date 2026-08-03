@@ -4,6 +4,7 @@ from calendar import monthrange
 import locale
 import sqlite3
 import os
+from db import get_connection
 
 try:
     locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -31,7 +32,7 @@ app.jinja_env.globals.update(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE_DIR, "b12.db")
 def init_db():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -68,7 +69,7 @@ def init_db():
 init_db()
 
 def get_status_by_event(event_id):
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -88,7 +89,7 @@ def get_status_by_event(event_id):
     return status_map
 
 def get_stats_by_event(event_id):
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -110,19 +111,11 @@ def get_stats_by_event(event_id):
         if statut in stats:
             stats[statut] += 1
 
-    ## les membres sans ligne = NSP
-    #cursor = sqlite3.connect(DB).cursor()
-    #cursor.execute("SELECT COUNT(*) FROM membres")
-    #total = cursor.fetchone()[0]
-
-    #stats["pending"] = total - (stats["present"] + stats["absent"])
-
     return stats
 
 
 def get_status(event_id,statut):
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -136,7 +129,7 @@ def get_status(event_id,statut):
     return resultat
 
 def get_events():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -170,7 +163,7 @@ def add():
         titre = request.form["titre"]
         lieu = request.form["lieu"]
 
-        conn = sqlite3.connect(DB)
+        conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -188,8 +181,7 @@ def add():
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     if request.method == "POST":
@@ -225,7 +217,7 @@ def presence():
     if statut not in ["present", "absent", "pending"]:
         return "Statut invalide", 400
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -242,8 +234,7 @@ def presence():
 
 @app.route("/inscription")
 def inscription():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("SELECT id, nom, status FROM membres ORDER BY nom COLLATE NOCASE")
@@ -266,8 +257,7 @@ def inscription_membre():
 @app.route("/inscription/membre/<int:membre_id>")
 def inscription_membre_detail(membre_id):
 
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM membres WHERE id = ?", (membre_id,))
@@ -312,7 +302,7 @@ def inscription_post():
     if statut not in ["present", "absent", "pending"]:
         return "Statut invalide", 400
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -335,8 +325,7 @@ def partitions():
 
 @app.route("/membres")
 def membres():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM membres ORDER BY nom COLLATE NOCASE")
@@ -353,8 +342,7 @@ def admin():
 @app.route("/admin/membres")
 def admin_membres():
 
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -382,7 +370,7 @@ def add_member():
     if status not in ["active", "guest", "former"]:
         status = "active"
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -402,7 +390,7 @@ def update_member(id):
     instruments = request.form["instruments"].strip()
     status = request.form["status"].strip()
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -419,7 +407,7 @@ def update_member(id):
 @app.route("/admin/membres/delete/<int:id>", methods=["POST"])
 def delete_member(id):
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cursor = conn.cursor()
 
     # On supprime d'abord les présences liées
@@ -445,8 +433,7 @@ def index():
     start = date(year, month, 1)
     end = date(year, month, monthrange(year, month)[1])
 
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cursor = conn.cursor()
 
     query = """
