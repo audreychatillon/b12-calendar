@@ -1,10 +1,16 @@
-import sqlite3
 import os
+import psycopg
+from psycopg.rows import dict_row
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB = os.path.join(BASE_DIR, "b12.db")
+load_dotenv()
+
+DATABASE_URL = os.environ["DATABASE_URL"]
+
 
 def get_connection():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg.connect(
+        DATABASE_URL,
+        row_factory=dict_row
+    )
     return conn

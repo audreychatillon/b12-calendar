@@ -1,4 +1,6 @@
 .venv/
+.env
+b12.db
 __pycache__/
 *.pyc
 *.swp

@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, send_file, abort, g
 from datetime import date,timedelta, datetime
 from calendar import monthrange
 import locale
-import sqlite3
 import os
 from db import get_connection
 
@@ -29,45 +28,6 @@ app.jinja_env.globals.update(
     format_date_long=format_date_long
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB = os.path.join(BASE_DIR, "b12.db")
-def init_db():
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS evenements (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT,
-        heure TEXT,
-        titre TEXT,
-        type TEXT,
-        lieu TEXT
-    )
-    """)
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS membres (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom TEXT,
-        instruments TEXT,
-        status TEXT
-    )
-    """)
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS presences (
-        membre_id INTEGER,
-        evenement_id INTEGER,
-        statut TEXT,
-        PRIMARY KEY (membre_id, evenement_id)
-    )
-    """)
-
-    conn.commit()
-    conn.close()
-init_db()
-
 def get_status_by_event(event_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -75,7 +35,7 @@ def get_status_by_event(event_id):
     cursor.execute("""
         SELECT membre_id, statut
         FROM presences
-        WHERE evenement_id = ?
+        WHERE evenement_id = %s
     """, (event_id,))
 
     rows = cursor.fetchall()
@@ -95,7 +55,7 @@ def get_stats_by_event(event_id):
     cursor.execute("""
         SELECT membre_id, statut
         FROM presences
-        WHERE evenement_id = ?
+        WHERE evenement_id = %s
     """, (event_id,))
 
     rows = cursor.fetchall()
@@ -121,7 +81,7 @@ def get_status(event_id,statut):
     cursor.execute("""
         SELECT membre_id
         FROM presences
-        WHERE evenement_id = ? AND statut = ?
+        WHERE evenement_id = %s AND statut = %s
     """, (event_id,statut))
 
     resultat = [row[0] for row in cursor.fetchall()]
@@ -168,7 +128,7 @@ def add():
 
         cursor.execute("""
             INSERT INTO evenements (date, heure, type, titre, lieu)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, (date, heure, type_event, titre, lieu))
 
         conn.commit()
@@ -193,15 +153,15 @@ def edit(id):
 
         cursor.execute("""
             UPDATE evenements
-            SET date = ?, heure = ?, type = ?, titre = ?, lieu = ?
-            WHERE id = ?
+            SET date = %s, heure = %s, type = %s, titre = %s, lieu = %s
+            WHERE id = %s
         """, (date, heure, type_event, titre, lieu, id))
 
         conn.commit()
         conn.close()
         return redirect("/")
 
-    cursor.execute("SELECT date, heure, type, titre, lieu FROM evenements WHERE id = ?", (id,))
+    cursor.execute("SELECT date, heure, type, titre, lieu FROM evenements WHERE id = %s", (id,))
     event = cursor.fetchone()
     conn.close()
 
@@ -222,7 +182,7 @@ def presence():
 
     cursor.execute("""
         INSERT INTO presences (membre_id, evenement_id, statut)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
         ON CONFLICT(membre_id, evenement_id)
         DO UPDATE SET statut = excluded.statut
     """, (membre_id, event_id, statut))
@@ -260,7 +220,7 @@ def inscription_membre_detail(membre_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM membres WHERE id = ?", (membre_id,))
+    cursor.execute("SELECT * FROM membres WHERE id = %s", (membre_id,))
     membre = cursor.fetchone()
 
     today = date.today()
@@ -268,7 +228,7 @@ def inscription_membre_detail(membre_id):
     cursor.execute("""
         SELECT id, date, heure, titre, type, lieu
         FROM evenements
-        WHERE date >= ?
+        WHERE date >= %s
         ORDER BY date, heure
     """, (str(today),))
 
@@ -278,7 +238,7 @@ def inscription_membre_detail(membre_id):
     cursor.execute("""
         SELECT evenement_id, statut
         FROM presences
-        WHERE membre_id = ?
+        WHERE membre_id = %s
     """, (membre_id,))
 
     presences = {row["evenement_id"]: row["statut"] for row in cursor.fetchall()}
@@ -307,7 +267,7 @@ def inscription_post():
 
     cursor.execute("""
         INSERT INTO presences (membre_id, evenement_id, statut)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
         ON CONFLICT(membre_id, evenement_id)
         DO UPDATE SET statut = excluded.statut
     """, (membre_id, event_id, statut))
@@ -328,7 +288,7 @@ def membres():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM membres ORDER BY nom COLLATE NOCASE")
+    cursor.execute("SELECT * FROM membres ORDER BY LOWER(nom)")
     membres = cursor.fetchall()
 
     conn.close()
@@ -348,7 +308,7 @@ def admin_membres():
     cursor.execute("""
         SELECT *
         FROM membres
-        ORDER BY nom COLLATE NOCASE
+        ORDER BY LOWER(nom)
     """)
 
     membres = cursor.fetchall()
@@ -375,7 +335,7 @@ def add_member():
 
     cursor.execute("""
         INSERT INTO membres (nom, instruments, status)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
     """, (nom, instruments, status))
 
     conn.commit()
@@ -395,8 +355,8 @@ def update_member(id):
 
     cursor.execute("""
         UPDATE membres
-        SET nom = ?, instruments = ?, status = ?
-        WHERE id = ?
+        SET nom = %s, instruments = %s, status = %s
+        WHERE id = %s
     """, (nom, instruments, status, id))
 
     conn.commit()
@@ -411,10 +371,10 @@ def delete_member(id):
     cursor = conn.cursor()
 
     # On supprime d'abord les présences liées
-    cursor.execute("DELETE FROM presences WHERE membre_id = ?", (id,))
+    cursor.execute("DELETE FROM presences WHERE membre_id = %s", (id,))
 
     # Puis le membre
-    cursor.execute("DELETE FROM membres WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM membres WHERE id = %s", (id,))
 
     conn.commit()
     conn.close()
@@ -439,18 +399,18 @@ def index():
     query = """
     SELECT id, date, heure, titre, type, lieu
     FROM evenements
-    WHERE date >= ? AND date <= ?
+    WHERE date >= %s AND date <= %s
     """
     
     params = [str(start), str(end)]
 
     # filtre type
     if filtre == "repet":
-        query += " AND type = ?"
+        query += " AND type = %s"
         params.append("repet")
 
     elif filtre == "concert":
-        query += " AND type = ?"
+        query += " AND type = %s"
         params.append("concert")
 
     query += " ORDER BY date, heure"
@@ -475,7 +435,7 @@ def index():
     cursor.execute("""
         SELECT date
         FROM evenements
-        WHERE date > ?
+        WHERE date > %s
         ORDER BY date ASC
         LIMIT 1
     """, (str(end),))
