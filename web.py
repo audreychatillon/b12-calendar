@@ -104,18 +104,6 @@ def get_events():
     conn.close()
     return rows
 
-@app.route("/download-db")
-def download_db():
-
-    date_str = datetime.now().strftime("%Y%m%d")
-    filename = f"b12_{date_str}.db"
-
-    return send_file(
-        DB,
-        as_attachment=True,
-        download_name=filename
-    )
-
 @app.route("/add", methods=["GET", "POST"])
 def add():
     if request.method == "POST":
