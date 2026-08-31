@@ -10,17 +10,28 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_TIME, "C")
 
-def format_date_short(date_str):
-    return datetime.strptime(date_str, "%Y-%m-%d").strftime("%A %d")
-
-def format_date_long(date_str):
-    return datetime.strptime(date_str, "%Y-%m-%d").strftime("%A %d %B %Y")
-
 months_fr = {
     1: "Janvier", 2: "Février", 3: "Mars", 4: "Avril",
     5: "Mai", 6: "Juin", 7: "Juillet", 8: "Août",
     9: "Septembre", 10: "Octobre", 11: "Novembre", 12: "Décembre"
 }
+days_fr = [
+    "Lun.",
+    "Mar.",
+    "Mer.",
+    "Jeu.",
+    "Ven.",
+    "Sam.",
+    "Dim."
+]
+
+def format_date_short(date_str):
+    d = datetime.strptime(date_str, "%Y-%m-%d")
+    return f"{days_fr[d.weekday()]} {d.day:02d}"
+
+def format_date_long(date_str):
+    d = datetime.strptime(date_str, "%Y-%m-%d")
+    return f"{days_fr[d.weekday()]} {d.day:02d} {months_fr[d.month]} {d.year}"
 
 app = Flask(__name__)
 app.jinja_env.globals.update(
@@ -462,6 +473,7 @@ def index():
         year=year,
         month=month,
         months_fr=months_fr,
+        days_fr=days_fr,
         mois=f"{year:04d}-{month:02d}",
         next_month_link=next_month_link,
         next_month_label=next_month_label
