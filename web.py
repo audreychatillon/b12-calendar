@@ -4,6 +4,8 @@ from calendar import monthrange
 import locale
 import os
 from db import get_connection
+from werkzeug.utils import secure_filename
+
 
 try:
     locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -115,6 +117,14 @@ def get_events():
     conn.close()
     return rows
 
+
+
+SETLIST_FOLDER = os.path.join(
+    app.static_folder,
+    "img",
+    "setlists"
+)
+
 def get_setlist_filename(event_date):
     filename = f"setlist_{event_date.replace('-', '')}.pdf"
     path = os.path.join(
@@ -126,6 +136,7 @@ def get_setlist_filename(event_date):
     if os.path.exists(path):
         return filename
     return None
+
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
@@ -393,6 +404,66 @@ def delete_member(id):
     conn.close()
 
     return redirect("/admin/membres")
+
+@app.route("/admin/setlists")
+def admin_setlists():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, date, heure, titre, lieu
+        FROM evenements
+        WHERE type = 'concert'
+        ORDER BY date DESC, heure DESC
+    """)
+
+    concerts = cursor.fetchall()
+    conn.close()
+
+    for concert in concerts:
+        concert["setlist_filename"] = get_setlist_filename(concert["date"])
+
+    return render_template(
+        "admin_setlists.html",
+        concerts=concerts
+    )
+
+@app.route("/admin/setlists/upload/<int:event_id>", methods=["POST"])
+def upload_setlist(event_id):
+
+    file = request.files.get("setlist")
+
+    if not file or not file.filename:
+        return redirect("/admin/setlists")
+
+    if not file.filename.lower().endswith(".pdf"):
+        return redirect("/admin/setlists")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT date
+        FROM evenements
+        WHERE id = %s AND type = 'concert'
+    """, (event_id,))
+
+    event = cursor.fetchone()
+    conn.close()
+
+    if not event:
+        return redirect("/admin/setlists")
+
+    os.makedirs(SETLIST_FOLDER, exist_ok=True)
+
+    filename = get_setlist_filename(event["date"])
+    filepath = os.path.join(SETLIST_FOLDER, filename)
+
+    file.save(filepath)
+
+    return redirect("/admin/setlists")
+
 
 @app.route("/")
 def index():

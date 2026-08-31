@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Setlists</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <h1 class="site-title">
+        <span class="material-symbols-outlined logo-yellow">
+            picture_as_pdf
+        </span>
+        Setlists
+    </h1>
+
+    <img src="{{ url_for('static', filename='img/b12.png') }}"
+         class="site-logo"
+         alt="B12 logo">
+
+</header>
+
+<div class="page">
+
+    {% if concerts %}
+
+        {% for concert in concerts %}
+
+            <div class="card concert">
+
+                <div class="title">
+                    🎷 {{ format_date_long(concert["date"]) }}
+                </div>
+
+                <div class="info">
+                    <b>{{ concert["titre"] }}</b><br>
+                    {{ concert["lieu"] }}
+                </div>
+
+                {% if concert["setlist_filename"] %}
+
+                    <p>
+                        <a class="button"
+                           href="{{ url_for(
+                               'static',
+                               filename='img/setlists/' ~ concert['setlist_filename']
+                           ) }}"
+                           target="_blank">
+                            <span class="material-symbols-outlined">picture_as_pdf</span>
+                            Voir la setlist
+                        </a>
+                    </p>
+
+                    <form method="POST"
+                          action="/admin/setlists/upload/{{ concert['id'] }}"
+                          enctype="multipart/form-data">
+
+                        <label class="button">
+                            <span class="material-symbols-outlined">edit</span>
+                            Modifier la setlist
+                            <input type="file"
+                                   name="setlist"
+                                   accept="application/pdf"
+                                   onchange="this.form.submit()"
+                                   hidden>
+                        </label>
+                    </form>
+
+                {% else %}
+
+                    <form method="POST"
+                          action="/admin/setlists/upload/{{ concert['id'] }}"
+                          enctype="multipart/form-data">
+
+                        <label class="button">
+                            <span class="material-symbols-outlined">
+                                upload_file
+                            </span>
+                            Ajouter la setlist
+                            <input type="file"
+                                   name="setlist"
+                                   accept="application/pdf"
+                                   onchange="this.form.submit()"
+                                   hidden>
+                        </label>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-card">
+            <span class="material-symbols-outlined empty-icon">
+                event_busy
+            </span>
+
+            <div class="empty">
+                Aucun concert
+            </div>
+        </div>
+
+    {% endif %}
+
+    <br>
+    <a href="/admin" class="back-calendar">← Retour à l'administration</a>
+    <br>
+    <a href="/" class="back-calendar">← Retour au calendrier</a>
+
+</div>
+
+</body>
+</html>
