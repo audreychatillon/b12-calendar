@@ -105,6 +105,10 @@ body {
 
     cursor: pointer;
     transition: 0.2s;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 .btn-primary:hover {
     border-color: #ffd400;

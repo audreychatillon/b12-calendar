@@ -1,10 +1,15 @@
 from flask import Flask, render_template, request, redirect, send_file, abort, g
 from datetime import date,timedelta, datetime
 from calendar import monthrange
-import locale
-import os
 from db import get_connection
 from werkzeug.utils import secure_filename
+import locale
+import os
+import unicodedata
+
+
+
+
 
 
 try:
@@ -40,6 +45,12 @@ app.jinja_env.globals.update(
     format_date_short=format_date_short,
     format_date_long=format_date_long
 )
+
+
+
+
+
+
 
 def get_status_by_event(event_id):
     conn = get_connection()
@@ -119,6 +130,9 @@ def get_events():
 
 
 
+
+
+
 SETLIST_FOLDER = os.path.join(
     app.static_folder,
     "img",
@@ -136,6 +150,34 @@ def get_setlist_filename(event_date):
     if os.path.exists(path):
         return filename
     return None
+
+
+
+
+
+
+
+PARTITION_FOLDER = os.path.join(
+    "static",
+    "img",
+    "partitions"
+)
+os.makedirs(PARTITION_FOLDER, exist_ok=True)
+
+def normalize_text(text):
+    text = text.strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(
+        c for c in text
+        if unicodedata.category(c) != "Mn"
+    )
+    return text
+
+
+
+
+
+
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -301,10 +343,157 @@ def inscription_post():
 
     return redirect(f"/inscription/membre/{membre_id}")
 
-@app.route("/partitions")
+@app.route("/partitions",methods=["GET","POST"])
 def partitions():
-    return render_template("partitions.html")
 
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+
+        titre = request.form.get("titre", "").strip()
+        instrument = request.form.get("instrument", "").strip()
+        file = request.files.get("fichier")
+        titre_normalise = normalize_text(titre)
+
+        if not titre or not instrument or not file:
+            conn.close()
+            return redirect("/partitions")
+
+        # Vérifie que le fichier est bien un PDF
+        if not file.filename.lower().endswith(".pdf"):
+            conn.close()
+            return redirect("/partitions")
+
+        # Cherche si le morceau existe déjà
+        cursor.execute("SELECT id, titre FROM morceaux")
+        morceaux_existants = cursor.fetchall()
+        morceau = None
+        for m in morceaux_existants:
+            if normalize_text(m["titre"]) == titre_normalise:
+                morceau = m
+                break
+        if morceau:
+            morceau_id = morceau["id"]
+        else:
+            cursor.execute(
+                "INSERT INTO morceaux (titre) VALUES (%s) RETURNING id",
+                (titre,)
+            )
+            morceau_id = cursor.fetchone()["id"]
+
+
+        # Cherche si une partition existe déjà pour ce morceau et cet instrument
+        cursor.execute("""
+            SELECT id
+            FROM partitions
+            WHERE morceau_id = %s AND instrument = %s
+        """, (morceau_id, instrument))
+        
+        partition = cursor.fetchone()
+        
+        if partition:
+            partition_id = partition["id"]
+        
+            # Nom du fichier basé sur l'ID de la partition
+            filename = f"partition_{morceau_id}_{partition_id}.pdf"        
+
+            # Remplace le fichier existant
+            filepath = os.path.join(PARTITION_FOLDER, filename)
+            file.save(filepath)
+        
+            cursor.execute("""
+                UPDATE partitions
+                SET fichier = %s,
+                    date_ajout = CURRENT_TIMESTAMP
+                WHERE id = %s
+            """, (filename, partition_id))
+        
+        else:
+            # Crée d'abord la partition pour obtenir son ID
+            cursor.execute("""
+                INSERT INTO partitions (morceau_id, instrument, fichier)
+                VALUES (%s, %s, %s)
+                RETURNING id
+            """, (morceau_id, instrument, ""))
+        
+            partition_id = cursor.fetchone()["id"]
+        
+            # Nom du fichier basé sur l'ID de la partition
+            filename = f"partition_{morceau_id}_{partition_id}.pdf"        
+            filepath = os.path.join(PARTITION_FOLDER, filename)
+            file.save(filepath)
+        
+            cursor.execute("""
+                UPDATE partitions
+                SET fichier = %s
+                WHERE id = %s
+            """, (filename, partition_id))
+
+        ## Nom du fichier
+        #filename = f"partition_{morceau_id}_{instrument}.pdf"
+        #filepath = os.path.join(PARTITION_FOLDER, filename)
+
+        ## Enregistre / remplace la partition
+        #file.save(filepath)
+
+        #cursor.execute("""
+        #    INSERT INTO partitions (morceau_id, instrument, fichier)
+        #    VALUES (%s, %s, %s)
+        #    ON CONFLICT (morceau_id, instrument)
+        #    DO UPDATE SET
+        #        fichier = EXCLUDED.fichier,
+        #        date_ajout = CURRENT_TIMESTAMP
+        #""", (morceau_id, instrument, filename))
+
+        conn.commit()
+        conn.close()
+
+        return redirect("/partitions")
+
+    # Instruments des musiciens actifs
+    cursor.execute("""
+        SELECT instruments
+        FROM membres
+        WHERE status = 'active'
+          AND instruments IS NOT NULL
+          AND instruments != ''
+    """)
+
+    rows = cursor.fetchall()
+
+    instruments = set()
+
+    for row in rows:
+        for instrument in row["instruments"].split(","):
+            instrument = instrument.strip()
+            if instrument:
+                instruments.add(instrument)
+
+    instruments = sorted(instruments)
+
+    # Morceaux et partitions existantes
+    cursor.execute("""
+        SELECT
+            morceaux.id AS morceau_id,
+            morceaux.titre,
+            partitions.instrument,
+            partitions.fichier
+        FROM morceaux
+        LEFT JOIN partitions
+            ON partitions.morceau_id = morceaux.id
+        ORDER BY LOWER(morceaux.titre), partitions.instrument
+    """)
+
+    morceaux = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "partitions.html",
+        instruments=instruments,
+        morceaux=morceaux
+    )
 
 
 @app.route("/membres")
@@ -457,7 +646,7 @@ def upload_setlist(event_id):
 
     os.makedirs(SETLIST_FOLDER, exist_ok=True)
 
-    filename = get_setlist_filename(event["date"])
+    filename = f"setlist_{event['date'].replace('-','')}.pdf" 
     filepath = os.path.join(SETLIST_FOLDER, filename)
 
     file.save(filepath)

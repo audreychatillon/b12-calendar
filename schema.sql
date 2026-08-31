@@ -30,3 +30,17 @@ CREATE TABLE presences (
         REFERENCES evenements(id)
         ON DELETE CASCADE
 );
+
+CREATE TABLE morceaux (
+    id SERIAL PRIMARY KEY,
+    titre TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE partitions (
+    id SERIAL PRIMARY KEY,
+    morceau_id INTEGER NOT NULL REFERENCES morceaux(id) ON DELETE CASCADE,
+    instrument TEXT NOT NULL,
+    fichier TEXT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (morceau_id, instrument)
+);
