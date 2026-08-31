@@ -26,121 +26,101 @@
 <div class="b12cd-bg">
 <div class="page">
 
-	<h2>Ajouter une partition</h2>
+<h2>Ajouter une partition</h2>
 	
-	<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data">
 	
-	    <label class="form-label" for="titre">
-	        Morceau
-	    </label>
-	
-	    <input type="text"
-	           id="titre"
-	           name="titre"
-	           class="form-input"
-	           placeholder="Nom du morceau"
-	           required>
-	
-	    <label class="form-label" for="instrument">
-	        Instrument
-	    </label>
-	
-	    <select id="instrument"
-	            name="instrument"
-	            class="form-input"
-	            required>
-	
-	        <option value="">Choisir un instrument</option>
-	
-	        {% for instrument in instruments %}
-	            <option value="{{ instrument }}">
-	                {{ instrument }}
-	            </option>
-	        {% endfor %}
-	
-	    </select>
-	
-	    <label class="form-label" for="fichier">
-	        Partition PDF
-	    </label>
-	
-	    <input type="file"
-	           id="fichier"
-	           name="fichier"
-	           accept=".pdf,application/pdf"
-	           required>
-	
-	    <br><br>
-	
-	    <button type="submit" class="btn-primary">
-	        <span class="material-symbols-outlined">upload_file</span>
-	        Ajouter la partition
-	    </button>
-	
-	</form>
+    <label class="form-label" for="titre"> Morceau</label>
 
-	<hr>
-	
-	<h2>Partitions disponibles</h2>
-	<label class="form-label" for="choix-morceau">Choisir un morceau</label>
-	
-	<select id="choix-morceau" class="form-input">
-	    <option value="">Choisir un morceau</option>
-	
-	    {% for morceau in morceaux | groupby("morceau_id") %}
-	        {% set premiere_partition = morceau.list[0] %}
-	        <option value="{{ morceau.grouper }}">
-	            {{ premiere_partition["titre"] }}
-	        </option>
-	    {% endfor %}
-	</select>
-	
-	<div id="partitions-morceau">
-	
-	    {% for groupe in morceaux | groupby("morceau_id") %}
-	
-	        {% set premiere_partition = groupe.list[0] %}
-	
-	        <div class="morceau-partitions"
-	             data-morceau="{{ groupe.grouper }}"
-	             style="display: none;">
-	
-	            <h3>{{ premiere_partition["titre"] }}</h3>
-	
-	            {% set a_une_partition = false %}
-	
-	            {% for partition in groupe.list %}
-	
-	                {% if partition["instrument"] %}
-	
-	                    {% set a_une_partition = true %}
-	
-	                    <div>
-	                        <strong>{{ partition["instrument"] }}</strong>
-	
-	                        {% if partition["fichier"] %}
-	                            —
-	                            <a href="{{ url_for('static', filename='img/partitions/' + partition['fichier']) }}"
-	                               target="_blank">
-	                                📄 Voir la partition
-	                            </a>
-	                        {% endif %}
-	                    </div>
-	
-	                {% endif %}
-	
-	            {% endfor %}
-	
-	            {% if not a_une_partition %}
-	                <p>Aucune partition disponible pour ce morceau.</p>
-	            {% endif %}
-	
-	        </div>
-	
-	    {% endfor %}
-	
-	</div>
+    <input type="text"
+           id="titre"
+           name="titre"
+           class="form-input"
+           placeholder="Nom du morceau"
+           required>
 
+    <label class="form-label" for="instrument">
+        Instrument
+    </label>
+
+    <select id="instrument"
+            name="instrument"
+            class="form-input"
+            required>
+
+        <option value="">Choisir un instrument</option>
+
+        {% for instrument in instruments %}
+            <option value="{{ instrument }}">
+                {{ instrument }}
+            </option>
+        {% endfor %}
+
+    </select>
+
+    <label class="form-label" for="fichier">
+        Partition PDF
+    </label>
+
+    <input type="file"
+           id="fichier"
+           name="fichier"
+           accept=".pdf,application/pdf"
+           required>
+
+    <br><br>
+
+    <button type="submit" class="btn-primary">
+        <span class="material-symbols-outlined">upload_file</span>
+        Ajouter la partition
+    </button>
+
+</form>
+
+<hr>
+<!--
+
+<h2>Partitions disponibles</h2>
+<label class="form-label" for="choix-morceau">Choisir un morceau</label>
+
+<select id="choix-morceau" class="form-input">
+    <option value="">Choisir un morceau</option>
+
+    {% for morceau in morceaux | groupby("morceau_id") %}
+        {% set premiere_partition = morceau.list[0] %}
+        <option value="{{ morceau.grouper }}">
+            {{ premiere_partition["titre"] }}
+        </option>
+    {% endfor %}
+</select>
+
+<div id="partitions-morceau">
+    {% for groupe in morceaux | groupby("morceau_id") %}
+        {% set premiere_partition = groupe.list[0] %}
+        <div class="morceau-partitions"
+             data-morceau="{{ groupe.grouper }}"
+             style="display: none;">
+            <h3>{{ premiere_partition["titre"] }}</h3>
+            {% set a_une_partition = false %}
+            {% for partition in groupe.list %}
+                {% if partition["instrument"] %}
+                    {% set a_une_partition = true %}
+                    <div>
+                        <strong>{{ partition["instrument"] }}</strong>
+                        {% if partition["fichier"] %}
+                            <a href="{{ url_for('static', filename='img/partitions/' + partition['fichier']) }}"
+                               target="_blank">📄 Voir la partition</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if not a_une_partition %}
+                <p>Aucune partition disponible pour ce morceau.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+-->
 
     <br>
     <a href="/" class="back-calendar">← Retour au calendrier</a>
