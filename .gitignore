@@ -4,3 +4,4 @@ b12.db
 __pycache__/
 *.pyc
 *.swp
+neon-data.sql

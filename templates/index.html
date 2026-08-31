@@ -81,7 +81,16 @@
         	        {% if event['type'] == "repet" %}
         	            🎼 Répétition
         	        {% else %}
-        	            🎷 Concert 🎸
+			    {% if setlist_by_event[event['id']] %}
+			        <a href="{{ url_for('static', filename='img/setlists/' ~ setlist_by_event[event['id']]) }}"
+			           target="_blank"
+			           class="setlist-link">
+			            🎷 Concert 🎸
+			        </a>
+			    {% else %}
+			            🎷 Concert 🎸
+			    {% endif %}
+
         	        {% endif %}
         	    </div>
 

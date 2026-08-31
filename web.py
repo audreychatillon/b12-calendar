@@ -104,6 +104,18 @@ def get_events():
     conn.close()
     return rows
 
+def get_setlist_filename(event_date):
+    filename = f"setlist_{event_date.replace('-', '')}.pdf"
+    path = os.path.join(
+        "static",
+        "img",
+        "setlists",
+        filename
+    )
+    if os.path.exists(path):
+        return filename
+    return None
+
 @app.route("/add", methods=["GET", "POST"])
 def add():
     if request.method == "POST":
@@ -411,11 +423,13 @@ def index():
     # statut par événement
     status_by_event = {}
     stats_by_event = {}
+    # setlist par concert
+    setlist_by_event = {}
     for event in events:
         event_id = event["id"]
         status_by_event[event_id] = get_status_by_event(event_id)
         stats_by_event[event["id"]] = get_stats_by_event(event["id"])
-
+        setlist_by_event[event_id] = get_setlist_filename(event["date"])
     cursor.execute("SELECT id, nom, status FROM membres")
     membres = cursor.fetchall()
 
@@ -443,6 +457,7 @@ def index():
         membres=membres,
         status_by_event=status_by_event,
         stats_by_event=stats_by_event,
+        setlist_by_event=setlist_by_event,
         filtre=filtre,
         year=year,
         month=month,
