@@ -25,6 +25,7 @@
 </header>
 <div class="b12cd-bg">
 <div class="page">
+<!--
 
 <h2>Ajouter une partition</h2>
 	
@@ -78,10 +79,9 @@
 </form>
 
 <hr>
-<!--
+-->
 
 <h2>Partitions disponibles</h2>
-<label class="form-label" for="choix-morceau">Choisir un morceau</label>
 
 <select id="choix-morceau" class="form-input">
     <option value="">Choisir un morceau</option>
@@ -114,13 +114,9 @@
                     </div>
                 {% endif %}
             {% endfor %}
-            {% if not a_une_partition %}
-                <p>Aucune partition disponible pour ce morceau.</p>
-            {% endif %}
         </div>
     {% endfor %}
 </div>
--->
 
     <br>
     <a href="/" class="back-calendar">← Retour au calendrier</a>
