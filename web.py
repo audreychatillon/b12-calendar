@@ -430,22 +430,6 @@ def partitions():
                 WHERE id = %s
             """, (filename, partition_id))
 
-        ## Nom du fichier
-        #filename = f"partition_{morceau_id}_{instrument}.pdf"
-        #filepath = os.path.join(PARTITION_FOLDER, filename)
-
-        ## Enregistre / remplace la partition
-        #file.save(filepath)
-
-        #cursor.execute("""
-        #    INSERT INTO partitions (morceau_id, instrument, fichier)
-        #    VALUES (%s, %s, %s)
-        #    ON CONFLICT (morceau_id, instrument)
-        #    DO UPDATE SET
-        #        fichier = EXCLUDED.fichier,
-        #        date_ajout = CURRENT_TIMESTAMP
-        #""", (morceau_id, instrument, filename))
-
         conn.commit()
         conn.close()
 
